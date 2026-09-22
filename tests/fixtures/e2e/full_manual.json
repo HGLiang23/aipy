@@ -1,0 +1,7 @@
+{
+  "scenario": "full_manual",
+  "preset": "FULL_MANUAL",
+  "manual_nodes": ["TOPIC_CONFIRM", "BRIEF_BUILD", "OUTLINE_BUILD", "SECTION_WRITE"],
+  "expected_outcome": "EXPORTED",
+  "assertions": ["no_generation_call_for_manual_nodes", "quality_checks_completed"]
+}

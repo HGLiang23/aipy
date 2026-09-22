@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environments and local configuration
+.venv/
+venv/
+.pnpm-store/
+.env
+.env.*
+!.env.example
+
+# Build output
+build/
+dist/
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Runtime files
+*.log
+celerybeat-schedule*
+
+# Repository CI must override the user's global .github ignore rule.
+!.github/
+!.github/workflows/
+!.github/workflows/ci.yml

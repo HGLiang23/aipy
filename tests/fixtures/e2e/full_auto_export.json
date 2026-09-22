@@ -1,0 +1,8 @@
+{
+  "scenario": "full_auto_export",
+  "preset": "FULL_AUTO",
+  "source_type": "RSS",
+  "manual_nodes": [],
+  "expected_outcome": "EXPORTED",
+  "assertions": ["all_required_nodes_completed", "package_hash_recorded", "audit_complete"]
+}

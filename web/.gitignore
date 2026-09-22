@@ -1,0 +1,8 @@
+.next/
+node_modules/
+out/
+*.tsbuildinfo
+.env.local
+dev-server*.log
+dev-server*.err
+*.png

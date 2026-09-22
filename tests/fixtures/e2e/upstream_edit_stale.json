@@ -1,0 +1,7 @@
+{
+  "scenario": "upstream_edit_stale",
+  "preset": "ASSISTED",
+  "action": "edit_source_version_after_export",
+  "expected_outcome": "WAITING_HUMAN",
+  "assertions": ["dependent_versions_stale", "unrelated_sections_fresh", "old_package_not_exportable"]
+}

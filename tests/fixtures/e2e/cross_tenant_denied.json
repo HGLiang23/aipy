@@ -1,0 +1,7 @@
+{
+  "scenario": "cross_tenant_denied",
+  "preset": "FULL_AUTO",
+  "action": "tenant_a_reads_tenant_b_content",
+  "expected_http_status": 404,
+  "assertions": ["api_denied", "worker_denied", "object_access_denied", "audit_recorded"]
+}

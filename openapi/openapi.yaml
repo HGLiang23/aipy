@@ -1,0 +1,387 @@
+openapi: 3.1.0
+info:
+  title: AIPY API
+  version: 0.1.0
+  description: MVP contract for the multi-tenant content workflow platform.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /health/live:
+    get:
+      security: []
+      tags: [health]
+      operationId: getLiveness
+      responses:
+        "200":
+          description: Process is alive.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+  /health/ready:
+    get:
+      security: []
+      tags: [health]
+      operationId: getReadiness
+      responses:
+        "200":
+          description: Service is ready.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "503":
+          $ref: "#/components/responses/Problem"
+  /auth/login:
+    post:
+      security: []
+      tags: [auth]
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+      responses:
+        "200":
+          description: Token pair.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenPair"
+        "401":
+          $ref: "#/components/responses/Problem"
+  /auth/refresh:
+    post:
+      security: []
+      tags: [auth]
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token: { type: string }
+      responses:
+        "200":
+          description: Rotated token pair.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenPair"
+  /session:
+    get:
+      tags: [identity]
+      operationId: getSession
+      responses:
+        "200":
+          description: Server-derived tenant and actor context.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionContext"
+  /content-runs:
+    get:
+      tags: [content-runs]
+      operationId: listContentRuns
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/After"
+      responses:
+        "200":
+          description: Content runs visible in the actor data scope.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ContentRun"
+                  next_cursor:
+                    type: [string, "null"]
+    post:
+      tags: [content-runs]
+      operationId: createContentRun
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [workspace_id, workflow_template_version_id]
+              properties:
+                workspace_id: { type: string, format: uuid }
+                brand_id: { type: [string, "null"], format: uuid }
+                workflow_template_version_id: { type: string, format: uuid }
+                title: { type: [string, "null"], maxLength: 200 }
+      responses:
+        "202":
+          description: Run accepted.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentRun"
+        "409":
+          $ref: "#/components/responses/Problem"
+  /content-runs/{content_run_id}:
+    get:
+      tags: [content-runs]
+      operationId: getContentRun
+      parameters:
+        - $ref: "#/components/parameters/ContentRunId"
+      responses:
+        "200":
+          description: Content run.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContentRun"
+        "404":
+          $ref: "#/components/responses/Problem"
+  /content-runs/{content_run_id}/pause:
+    post:
+      tags: [content-runs]
+      operationId: pauseContentRun
+      parameters:
+        - $ref: "#/components/parameters/ContentRunId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "202": { description: Pause requested. }
+        "409": { $ref: "#/components/responses/Problem" }
+  /content-runs/{content_run_id}/resume:
+    post:
+      tags: [content-runs]
+      operationId: resumeContentRun
+      parameters:
+        - $ref: "#/components/parameters/ContentRunId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      responses:
+        "202": { description: Resume accepted. }
+        "409": { $ref: "#/components/responses/Problem" }
+  /content-runs/{content_run_id}/retry:
+    post:
+      tags: [content-runs]
+      operationId: retryContentRunNode
+      parameters:
+        - $ref: "#/components/parameters/ContentRunId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [node_key, expected_version]
+              properties:
+                node_key: { type: string }
+                expected_version: { type: integer, minimum: 0 }
+      responses:
+        "202": { description: Retry accepted. }
+        "409": { $ref: "#/components/responses/Problem" }
+  /content-runs/{content_run_id}/export:
+    post:
+      tags: [publication]
+      operationId: exportContentRun
+      parameters:
+        - $ref: "#/components/parameters/ContentRunId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [artifact_version_id, format]
+              properties:
+                artifact_version_id: { type: string, format: uuid }
+                format:
+                  type: string
+                  enum: [MARKDOWN, HTML, JSON, ZIP]
+      responses:
+        "202": { description: Export accepted. }
+        "409": { $ref: "#/components/responses/Problem" }
+  /human-tasks:
+    get:
+      tags: [human-tasks]
+      operationId: listHumanTasks
+      responses:
+        "200":
+          description: Actor-visible tasks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HumanTask"
+  /human-tasks/{task_id}/decisions:
+    post:
+      tags: [human-tasks]
+      operationId: decideHumanTask
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision, expected_version, artifact_version_id]
+              properties:
+                decision:
+                  type: string
+                  enum: [APPROVE, EDIT_AND_APPROVE, REQUEST_REWORK, REJECT_CONTENT, SKIP]
+                artifact_version_id: { type: [string, "null"], format: uuid }
+                expected_version: { type: integer, minimum: 0 }
+                comment: { type: [string, "null"], maxLength: 2000 }
+      responses:
+        "200": { description: Decision recorded. }
+        "409": { $ref: "#/components/responses/Problem" }
+  /artifacts/{artifact_id}/versions:
+    get:
+      tags: [artifacts]
+      operationId: listArtifactVersions
+      parameters:
+        - name: artifact_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Immutable versions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ArtifactVersion"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    ContentRunId:
+      name: content_run_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string, minLength: 16, maxLength: 128 }
+    Limit:
+      name: limit
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    After:
+      name: after
+      in: query
+      schema: { type: string }
+  responses:
+    Problem:
+      description: Stable problem response.
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+  schemas:
+    HealthResponse:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [alive, ready, not_ready] }
+        checks:
+          type: [object, "null"]
+          additionalProperties: { type: boolean }
+    TokenPair:
+      type: object
+      required: [access_token, refresh_token, access_expires_at, refresh_expires_at]
+      properties:
+        access_token: { type: string }
+        refresh_token: { type: string }
+        access_expires_at: { type: string, format: date-time }
+        refresh_expires_at: { type: string, format: date-time }
+    SessionContext:
+      type: object
+      required: [tenant_id, actor_id, allowed_actions]
+      properties:
+        tenant_id: { type: string, format: uuid }
+        actor_id: { type: string, format: uuid }
+        allowed_actions:
+          type: array
+          items: { type: string }
+    ContentRun:
+      type: object
+      required: [id, workspace_id, status, business_stage, row_version]
+      properties:
+        id: { type: string, format: uuid }
+        workspace_id: { type: string, format: uuid }
+        title: { type: [string, "null"] }
+        status:
+          type: string
+          enum: [DRAFT, RUNNING, WAITING_HUMAN, PAUSED, COMPLETED, FAILED, CANCELLED]
+        business_stage:
+          type: string
+          enum: [COLLECTION, DISCOVERY, PLANNING, DRAFTING, VALIDATION, ADAPTATION, DELIVERY, DONE]
+        outcome: { type: [string, "null"] }
+        row_version: { type: integer, minimum: 0 }
+    HumanTask:
+      type: object
+      required: [id, content_run_id, task_type, status, row_version]
+      properties:
+        id: { type: string, format: uuid }
+        content_run_id: { type: string, format: uuid }
+        task_type:
+          type: string
+          enum: [INPUT, REVIEW, REWORK, EXCEPTION, PUBLISH_CONFIRMATION]
+        status:
+          type: string
+          enum: [OPEN, CLAIMED, COMPLETED, CANCELLED, EXPIRED]
+        artifact_version_id: { type: [string, "null"], format: uuid }
+        row_version: { type: integer, minimum: 0 }
+    ArtifactVersion:
+      type: object
+      required: [id, artifact_id, version_no, lifecycle_status, freshness_status, content_hash]
+      properties:
+        id: { type: string, format: uuid }
+        artifact_id: { type: string, format: uuid }
+        version_no: { type: integer, minimum: 1 }
+        lifecycle_status:
+          type: string
+          enum: [ACTIVE, SUPERSEDED, REJECTED, ARCHIVED]
+        freshness_status:
+          type: string
+          enum: [FRESH, STALE]
+        content_hash: { type: string }
+        payload: { type: object, additionalProperties: true }
+    Problem:
+      type: object
+      required: [type, title, status, code, request_id]
+      properties:
+        type: { type: string, format: uri-reference }
+        title: { type: string }
+        status: { type: integer }
+        code: { type: string }
+        detail: { type: [string, "null"] }
+        request_id: { type: string }

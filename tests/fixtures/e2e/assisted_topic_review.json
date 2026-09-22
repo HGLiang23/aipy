@@ -1,0 +1,8 @@
+{
+  "scenario": "assisted_topic_review",
+  "preset": "ASSISTED",
+  "manual_nodes": ["TOPIC_CONFIRM", "OUTLINE_BUILD"],
+  "actions": ["edit_topic", "approve_topic", "edit_outline", "approve_outline"],
+  "expected_outcome": "EXPORTED",
+  "assertions": ["human_versions_preserved", "approvals_bind_exact_versions"]
+}

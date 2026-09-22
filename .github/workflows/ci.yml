@@ -1,0 +1,120 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: aipy_test
+          POSTGRES_USER: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d aipy_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      AIPY_ENVIRONMENT: test
+      AIPY_DATABASE__URL: postgresql+psycopg://postgres@localhost:5432/aipy_test
+      AIPY_REDIS__URL: redis://localhost:6379/0
+      AIPY_CELERY__BROKER_URL: redis://localhost:6379/1
+      AIPY_TEST_DATABASE_ADMIN_URL: postgresql+psycopg://postgres@localhost:5432/aipy_test
+      AIPY_TEST_DATABASE_RUNTIME_URL: postgresql+psycopg://aipy_runtime:runtime-test-password@localhost:5432/aipy_test
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install project
+        run: python -m pip install --editable ".[dev]"
+
+      - name: Ruff lint
+        run: python -m ruff check .
+
+      - name: Ruff format
+        run: python -m ruff format --check .
+
+      - name: Mypy
+        run: python -m mypy
+
+      - name: Apply database migrations
+        run: python -m alembic -c migrations/alembic.ini upgrade head
+
+      - name: Check database schema metadata
+        run: python -m alembic -c migrations/alembic.ini check
+
+      - name: Create non-owner RLS runtime role
+        run: |
+          PGPASSWORD="" psql -h localhost -U postgres -d aipy_test <<'SQL'
+          DO $do$
+          BEGIN
+            IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'aipy_runtime') THEN
+              CREATE ROLE aipy_runtime LOGIN PASSWORD 'runtime-test-password'
+                NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
+            END IF;
+          END
+          $do$;
+          GRANT USAGE ON SCHEMA public TO aipy_runtime;
+          GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO aipy_runtime;
+          GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO aipy_runtime;
+          SQL
+
+      - name: Pytest
+        run: python -m pytest
+
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Enable pnpm
+        run: corepack enable && corepack prepare pnpm@9.15.3 --activate
+
+      - name: Install frontend dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Type-check frontend
+        run: pnpm typecheck
