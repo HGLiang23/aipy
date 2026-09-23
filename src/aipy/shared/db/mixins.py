@@ -10,23 +10,47 @@ from aipy.shared.db.ids import new_uuid7
 
 
 class UUIDPrimaryKeyMixin:
-    id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=new_uuid7)
+    id: Mapped[UUID] = mapped_column(
+        Uuid(as_uuid=True),
+        primary_key=True,
+        default=new_uuid7,
+        comment="主键，UUIDv7（时间有序），由应用生成",
+    )
 
 
 class TimestampAuditMixin:
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+        comment="创建时间（数据库时区为 UTC）",
     )
-    created_by: Mapped[UUID | None] = mapped_column(Uuid(as_uuid=True), nullable=True)
+    created_by: Mapped[UUID | None] = mapped_column(
+        Uuid(as_uuid=True),
+        nullable=True,
+        comment="创建人用户 ID，系统自动创建时为空",
+    )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+        comment="最后更新时间",
     )
-    updated_by: Mapped[UUID | None] = mapped_column(Uuid(as_uuid=True), nullable=True)
+    updated_by: Mapped[UUID | None] = mapped_column(
+        Uuid(as_uuid=True),
+        nullable=True,
+        comment="最后更新人用户 ID，系统自动更新时为空",
+    )
 
 
 class OptimisticLockMixin:
     row_version: Mapped[int] = mapped_column(
-        BigInteger, nullable=False, default=0, server_default=text("0")
+        BigInteger,
+        nullable=False,
+        default=0,
+        server_default=text("0"),
+        comment="乐观锁版本号，每次更新自增 1，用于并发冲突检测",
     )
 
     @declared_attr.directive
@@ -44,6 +68,7 @@ class TenantScopedMixin:
             Uuid(as_uuid=True),
             ForeignKey("tenant.id", ondelete="RESTRICT"),
             nullable=False,
+            comment="所属租户 ID，行级安全策略（RLS）的隔离依据",
         )
 
 

@@ -1,0 +1,33 @@
+﻿=== .workbuddy ===
+  .workbuddy\pg_run.txt
+  .workbuddy\pg_test.txt
+  .workbuddy\tmp_wiring.txt
+  .workbuddy\verify.txt
+  .workbuddy\memory\2026-09-23.md
+=== git status ===
+M apps/api/main.py
+ M migrations/env.py
+ M src/aipy/shared/db/__init__.py
+ M src/aipy/shared/db/session.py
+ M web/app/(workspace)/app/content/[id]/page.tsx
+ M web/app/(workspace)/app/content/page.tsx
+ M web/app/(workspace)/app/human-tasks/page.tsx
+ M web/app/(workspace)/app/layout.tsx
+ M web/app/(workspace)/app/materials/page.tsx
+ M web/app/(workspace)/app/page.tsx
+ M web/app/login/page.tsx
+ M web/lib/api-client.ts
+?? .workbuddy/
+?? apps/api/dependencies.py
+?? apps/api/repositories.py
+?? apps/api/routes/auth.py
+?? apps/api/routes/human_tasks.py
+?? apps/api/routes/materials.py
+?? apps/api/routes/workflow_runs.py
+?? apps/api/schemas.py
+?? migrations/versions/20260724_0002_content_entities.py
+?? migrations/versions/20260724_0003_membership_self_lookup.py
+?? scripts/seed_dev.py
+?? src/aipy/modules/content/
+?? web/components/session-loader.tsx
+?? web/lib/use-api.ts

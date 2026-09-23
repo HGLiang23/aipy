@@ -1,0 +1,52 @@
+{
+  "tables_before": [
+    "alembic_version",
+    "app_user",
+    "brand",
+    "content_run",
+    "human_task",
+    "material",
+    "plan",
+    "team",
+    "team_member",
+    "tenant",
+    "tenant_membership",
+    "tenant_subscription",
+    "workspace"
+  ],
+  "row_counts": {
+    "alembic_version": 1,
+    "app_user": 1,
+    "brand": 1,
+    "content_run": 5,
+    "human_task": 3,
+    "material": 4,
+    "plan": 1,
+    "team": 0,
+    "team_member": 0,
+    "tenant": 1,
+    "tenant_membership": 1,
+    "tenant_subscription": 0,
+    "workspace": 1
+  },
+  "backup_path": "D:\\code\\aipy\\.workbuddy\\backups\\aipg_test_full_backup_20260923_154522.json",
+  "backup_bytes": 11531,
+  "dropped": [
+    "alembic_version",
+    "app_user",
+    "brand",
+    "content_run",
+    "human_task",
+    "material",
+    "plan",
+    "team",
+    "team_member",
+    "tenant",
+    "tenant_membership",
+    "tenant_subscription",
+    "workspace"
+  ],
+  "tables_after": [],
+  "leftover_objects": [],
+  "leftover_types": []
+}

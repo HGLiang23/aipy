@@ -1,10 +1,16 @@
+"use client";
+
 import { Filter, Plus, Search } from "lucide-react";
 import Link from "next/link";
 import { PermissionGate } from "@/components/permission-gate";
 import { PageHeader, StatusBadge } from "@/components/ui";
-import { mockContentRuns } from "@/lib/mock-data";
+import { useApiList } from "@/lib/use-api";
+import type { ContentRunSummary } from "@/lib/types";
 
 export default function ContentRunsPage() {
+  const { page, loading, error } = useApiList<ContentRunSummary>("content-runs");
+  const items = page?.items ?? [];
+
   return (
     <div className="page-stack">
       <PageHeader
@@ -33,9 +39,15 @@ export default function ContentRunsPage() {
             <tr><th>内容任务</th><th>品牌</th><th>当前阶段</th><th>状态</th><th>负责人</th><th>更新时间</th></tr>
           </thead>
           <tbody>
-            {mockContentRuns.map((run) => (
+            {loading && (
+              <tr><td colSpan={6} className="table-summary">加载中…</td></tr>
+            )}
+            {!loading && items.map((run) => (
               <tr key={run.id}>
-                <td data-label="内容任务"><Link className="table-link" href={`/app/content/${run.id}`}>{run.title}</Link><small>{run.id}</small></td>
+                <td data-label="内容任务">
+                  <Link className="table-link" href={`/app/content/${run.id}`}>{run.title}</Link>
+                  <small>{run.id}</small>
+                </td>
                 <td data-label="品牌">{run.brand}</td>
                 <td data-label="当前阶段">{run.stageLabel}</td>
                 <td data-label="状态"><StatusBadge tone={run.tone}>{run.statusLabel}</StatusBadge></td>
@@ -46,7 +58,8 @@ export default function ContentRunsPage() {
           </tbody>
         </table>
       </div>
-      <p className="table-summary">共 {mockContentRuns.length} 项 · 模拟数据</p>
+      {error && <p className="table-summary">{error}</p>}
+      {!loading && !error && <p className="table-summary">共 {items.length} 项</p>}
     </div>
   );
 }

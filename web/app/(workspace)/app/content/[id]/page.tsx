@@ -1,14 +1,49 @@
+"use client";
+
 import { ArrowLeft, Clock3, Ellipsis, Pause, RotateCcw } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { PageHeader, StatusBadge } from "@/components/ui";
-import { mockContentRuns, mockWorkflowNodes } from "@/lib/mock-data";
+import { apiClient } from "@/lib/api-client";
+import { mockWorkflowNodes } from "@/lib/mock-data";
+import type { ContentRunSummary } from "@/lib/types";
 
-export default async function ContentRunDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const run = mockContentRuns.find((item) => item.id === id);
-  if (!run) notFound();
+type State = { kind: "loading" } | { kind: "missing" } | { kind: "ready"; run: ContentRunSummary };
 
+export default function ContentRunDetailPage() {
+  const params = useParams<{ id: string }>();
+  const id = params.id;
+  const [state, setState] = useState<State>({ kind: "loading" });
+
+  useEffect(() => {
+    let active = true;
+    apiClient
+      .getContentRun(id)
+      .then((run) => {
+        if (active) setState({ kind: "ready", run });
+      })
+      .catch(() => {
+        if (active) setState({ kind: "missing" });
+      });
+    return () => {
+      active = false;
+    };
+  }, [id]);
+
+  if (state.kind === "loading") {
+    return <div className="page-stack"><p className="table-summary">加载中…</p></div>;
+  }
+  if (state.kind === "missing") {
+    return (
+      <div className="page-stack">
+        <Link className="back-link" href="/app/content"><ArrowLeft size={16} /> 返回内容任务</Link>
+        <p className="table-summary">未找到该内容任务（{id}）。</p>
+      </div>
+    );
+  }
+
+  const run = state.run;
   return (
     <div className="page-stack">
       <Link className="back-link" href="/app/content"><ArrowLeft size={16} /> 返回内容任务</Link>
@@ -41,7 +76,7 @@ export default async function ContentRunDetailPage({ params }: { params: Promise
               <li className={`timeline-item timeline-${node.state}`} key={node.name}>
                 <span className="timeline-dot" aria-hidden="true" />
                 <div><strong>{node.name}</strong><small>{node.detail}</small></div>
-                <StatusBadge tone={node.tone}>{node.label}</StatusBadge>
+                <StatusBadge tone={node.tone as never}>{node.label}</StatusBadge>
               </li>
             ))}
           </ol>

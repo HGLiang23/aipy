@@ -1,0 +1,382 @@
+{
+ "database": "aipg_test",
+ "tables": {
+  "alembic_version": [
+   {
+    "version_num": "20260724_0003"
+   }
+  ],
+  "app_user": [
+   {
+    "id": "019f91e3-0000-4000-8000-000000000003",
+    "created_at": "2026-09-23T15:15:02.944214+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:15:02.944214+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "email": "editor@example.com",
+    "phone": null,
+    "password_hash": "$argon2id$v=19$m=65536,t=3,p=4$Wspzpe5gegAY3/4CRpA9nA$SMCJz3vQiuowDU7W+P0hyDcPsbODrsHctvbmIgngXEI",
+    "display_name": "林编辑",
+    "status": "ACTIVE",
+    "mfa_enabled": false,
+    "last_login_at": null
+   }
+  ],
+  "brand": [
+   {
+    "id": "019f91e3-0000-4000-8000-000000000006",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "workspace_id": "019f91e3-0000-4000-8000-000000000002",
+    "name": "远山商业",
+    "description": "远山内容工作室主品牌",
+    "tone_guideline": null,
+    "prohibited_terms": [],
+    "default_language": "zh-CN",
+    "status": "ACTIVE"
+   }
+  ],
+  "content_run": [
+   {
+    "id": "01a0cd22-0e6f-7451-9d6e-3b052a6d1e85",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "CR-20260724-018",
+    "seq": 1,
+    "title": "AI 搜索如何改变品牌内容策略",
+    "brand": "远山商业",
+    "stage_label": "分段写作",
+    "status_label": "运行中",
+    "tone": "info",
+    "owner": "林编辑",
+    "updated_at_label": "2 分钟前",
+    "allowed_actions": [
+     "view",
+     "pause"
+    ]
+   },
+   {
+    "id": "01a0cd22-0e70-77e0-a00d-a42a5608d8c4",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "CR-20260724-017",
+    "seq": 2,
+    "title": "周末城市轻徒步路线清单",
+    "brand": "慢游计划",
+    "stage_label": "大纲审核",
+    "status_label": "等待人工",
+    "tone": "warning",
+    "owner": "周岚",
+    "updated_at_label": "18 分钟前",
+    "allowed_actions": [
+     "view",
+     "approve",
+     "reject"
+    ]
+   },
+   {
+    "id": "01a0cd22-0e71-711b-8c19-a509dc2b31ae",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "CR-20260724-014",
+    "seq": 3,
+    "title": "团队知识库落地的五个误区",
+    "brand": "远山商业",
+    "stage_label": "平台适配",
+    "status_label": "运行中",
+    "tone": "info",
+    "owner": "林编辑",
+    "updated_at_label": "42 分钟前",
+    "allowed_actions": [
+     "view",
+     "pause"
+    ]
+   },
+   {
+    "id": "01a0cd22-0e72-713d-800d-253fd34854ab",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "CR-20260724-011",
+    "seq": 4,
+    "title": "新消费品牌七月观察",
+    "brand": "趋势手记",
+    "stage_label": "发布包",
+    "status_label": "已完成",
+    "tone": "success",
+    "owner": "陈知",
+    "updated_at_label": "今天 09:20",
+    "allowed_actions": [
+     "view",
+     "export"
+    ]
+   },
+   {
+    "id": "01a0cd22-0e73-759d-8151-09b2f9eae4ff",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "CR-20260723-096",
+    "seq": 5,
+    "title": "内容团队如何配置模型预算",
+    "brand": "远山商业",
+    "stage_label": "事实检查",
+    "status_label": "需要处理",
+    "tone": "danger",
+    "owner": "林编辑",
+    "updated_at_label": "昨天 18:06",
+    "allowed_actions": [
+     "view",
+     "rerun"
+    ]
+   }
+  ],
+  "human_task": [
+   {
+    "id": "01a0cd22-0eaf-7c16-8d22-7891d26dcd0f",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "HT-201",
+    "seq": 1,
+    "title": "审核《周末城市轻徒步路线清单》大纲",
+    "type": "大纲审核",
+    "reason": "人机协同模板在大纲节点要求人工确认。",
+    "priority": "高",
+    "brand": "慢游计划",
+    "owner": "已分配给你",
+    "due_label": "今天 14:30 到期",
+    "allowed_actions": [
+     "approve",
+     "reject",
+     "reassign"
+    ]
+   },
+   {
+    "id": "01a0cd22-0eb0-7815-932d-904e8d076125",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "HT-198",
+    "seq": 2,
+    "title": "确认新消费品牌观察的引用来源",
+    "type": "事实核查",
+    "reason": "两条行业数据缺少一级来源。",
+    "priority": "普通",
+    "brand": "趋势手记",
+    "owner": "已分配给你",
+    "due_label": "今天 18:00 到期",
+    "allowed_actions": [
+     "submit",
+     "reassign"
+    ]
+   },
+   {
+    "id": "01a0cd22-0eb1-7b48-a840-13321099dace",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "HT-193",
+    "seq": 3,
+    "title": "处理模型预算文章的质量门禁",
+    "type": "异常处理",
+    "reason": "事实检查评分 72，低于租户阈值 80。",
+    "priority": "普通",
+    "brand": "远山商业",
+    "owner": "团队任务",
+    "due_label": "明天 10:00 到期",
+    "allowed_actions": [
+     "claim"
+    ]
+   }
+  ],
+  "material": [
+   {
+    "id": "01a0cd22-0eed-7a4f-9f63-20702dde8419",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "MAT-301",
+    "seq": 1,
+    "title": "2026 内容营销趋势报告",
+    "summary": "聚焦生成式搜索、内容可信度和品牌自有数据策略。",
+    "source": "research.example.com",
+    "type": "PDF",
+    "trust_label": "高可信",
+    "tone": "success",
+    "updated_at_label": "今天 10:16",
+    "allowed_actions": [
+     "view",
+     "edit"
+    ]
+   },
+   {
+    "id": "01a0cd22-0eee-7967-8fe1-44dc60142fb7",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "MAT-299",
+    "seq": 2,
+    "title": "微信公众号内容运营规则更新",
+    "summary": "平台近期关于原创、转载和 AI 辅助内容标识的规则摘要。",
+    "source": "weixin.qq.com",
+    "type": "网页",
+    "trust_label": "官方来源",
+    "tone": "info",
+    "updated_at_label": "今天 09:42",
+    "allowed_actions": [
+     "view",
+     "edit"
+    ]
+   },
+   {
+    "id": "01a0cd22-0eef-79d5-b1d1-564b993852db",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "MAT-287",
+    "seq": 3,
+    "title": "团队访谈：内容审核流程",
+    "summary": "内部编辑与审核员访谈纪要，包含现有协作问题。",
+    "source": "人工上传",
+    "type": "DOCX",
+    "trust_label": "内部资料",
+    "tone": "neutral",
+    "updated_at_label": "昨天 16:20",
+    "allowed_actions": [
+     "view",
+     "edit"
+    ]
+   },
+   {
+    "id": "01a0cd22-0ef0-78eb-a339-9da53cb69895",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "MAT-281",
+    "seq": 4,
+    "title": "城市徒步路线用户调研",
+    "summary": "来自 126 份问卷的偏好、时长和安全关注点汇总。",
+    "source": "人工上传",
+    "type": "XLSX",
+    "trust_label": "待复核",
+    "tone": "warning",
+    "updated_at_label": "昨天 11:08",
+    "allowed_actions": [
+     "view",
+     "edit"
+    ]
+   }
+  ],
+  "plan": [
+   {
+    "id": "019f91e3-0000-4000-8000-000000000005",
+    "created_at": "2026-09-23T15:15:02.311245+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:15:02.311245+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "default",
+    "name": "默认套餐",
+    "status": "ACTIVE",
+    "max_users": 10,
+    "max_workspaces": 3,
+    "max_daily_articles": 100
+   }
+  ],
+  "tenant": [
+   {
+    "id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:15:02.558186+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:15:02.558186+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "code": "yuanshan",
+    "name": "远山内容工作室",
+    "status": "ACTIVE",
+    "timezone": "Asia/Shanghai",
+    "locale": "zh-CN",
+    "data_region": "CN",
+    "plan_id": "019f91e3-0000-4000-8000-000000000005",
+    "settings_version": 0
+   }
+  ],
+  "tenant_membership": [
+   {
+    "id": "019f91e3-0000-4000-8000-000000000004",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 0,
+    "user_id": "019f91e3-0000-4000-8000-000000000003",
+    "status": "ACTIVE",
+    "member_no": null,
+    "job_title": "租户管理员",
+    "joined_at": "2026-09-23T15:19:13.913414+08:00"
+   }
+  ],
+  "workspace": [
+   {
+    "id": "019f91e3-0000-4000-8000-000000000002",
+    "tenant_id": "019f91e3-0000-4000-8000-000000000001",
+    "created_at": "2026-09-23T15:19:15.448978+08:00",
+    "created_by": null,
+    "updated_at": "2026-09-23T15:19:15.448978+08:00",
+    "updated_by": null,
+    "row_version": 1,
+    "code": "default",
+    "name": "默认工作空间",
+    "status": "ACTIVE",
+    "default_brand_id": "019f91e3-0000-4000-8000-000000000006",
+    "created_by_membership_id": "019f91e3-0000-4000-8000-000000000004"
+   }
+  ]
+ }
+}

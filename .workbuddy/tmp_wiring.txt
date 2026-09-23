@@ -1,0 +1,16 @@
+﻿=== migrations listing ===
+  migrations\alembic.ini
+  migrations\env.py
+  migrations\README.md
+  migrations\script.py.mako
+  migrations\versions\20260724_0001_initial_tenancy.py
+  migrations\versions\__pycache__\20260724_0001_initial_tenancy.cpython-312.pyc
+  migrations\versions\__pycache__\20260724_0001_initial_tenancy.cpython-314.pyc
+  migrations\__pycache__\env.cpython-312.pyc
+  migrations\__pycache__\env.cpython-314.pyc
+=== repo root config-ish ===
+  .env.example
+  pyproject.toml
+=== any create_all / make_engine in src or apps ===
+  src\aipy\shared\db\session.py: def make_engine(database_url: str, *, echo: bool = False) -> Engine:
+  src\aipy\shared\db\__init__.py: make_engine, "make_engine",

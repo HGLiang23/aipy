@@ -39,6 +39,21 @@ def set_tenant_context(
     )
 
 
+def set_user_context(session: Session, user_id: UUID) -> None:
+    """Set the transaction-local ``app.user_id`` for self-lookup RLS policies.
+
+    Only call this *after* the caller has verified the user's credentials: the
+    membership self-lookup policy grants a session read access to that user's own
+    ``tenant_membership`` rows, which is what lets login resolve a tenant before any
+    ``app.tenant_id`` exists.
+    """
+
+    session.execute(
+        text("SELECT set_config('app.user_id', :user_id, true)"),
+        {"user_id": str(user_id)},
+    )
+
+
 @contextmanager
 def session_scope(factory: SessionFactory) -> Iterator[Session]:
     session = factory()

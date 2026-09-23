@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>AIPY 数据字典</title>
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0; padding: 32px 40px; background: #f7f8fa; color: #1f2328;
+         font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; line-height: 1.6; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  .meta { color: #656d76; font-size: 13px; margin-bottom: 28px; }
+  h2 { font-size: 17px; margin: 32px 0 12px; padding-left: 10px; border-left: 4px solid #2f81f7; }
+  .card { background: #fff; border: 1px solid #d8dee4; border-radius: 10px; margin-bottom: 20px;
+          overflow: hidden; }
+  .card > header { padding: 12px 16px; background: #f0f3f6; border-bottom: 1px solid #d8dee4; }
+  .card > header .name { font-family: ui-monospace, Consolas, monospace; font-weight: 600;
+                         font-size: 14px; color: #0550ae; }
+  .card > header .desc { font-size: 13px; color: #3d444d; margin-top: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 8px 16px; background: #fbfcfd; color: #656d76;
+       font-weight: 600; border-bottom: 1px solid #d8dee4; }
+  td { padding: 7px 16px; border-bottom: 1px solid #eaeef2; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td.col { font-family: ui-monospace, Consolas, monospace; color: #1f2328; white-space: nowrap; }
+  td.type { font-family: ui-monospace, Consolas, monospace; color: #8250df; font-size: 12px;
+            white-space: nowrap; }
+  td.req { color: #cf222e; font-size: 12px; }
+  td.note { color: #3d444d; }
+  code { background: #eff1f3; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+</style>
+</head>
+<body>
+<h1>AIPY 数据字典</h1>
+
+<div class="meta">数据库 <code>aipg_test</code> · Alembic 版本 <code>20260923_0005</code> · 业务表 12 张 · 字段 161 个</div>
+<h2>租户与套餐 (tenancy)</h2>
+<div class="card"><header><div class="name">plan</div><div class="desc">套餐定义：约束单个租户可用的成员数、工作区数与每日内容产额</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">code</td><td class="type">citext</td><td class="req">是</td><td class="note">套餐编码，全局唯一</td></tr>
+<tr><td class="col">name</td><td class="type">character varying(120)</td><td class="req">是</td><td class="note">套餐名称</td></tr>
+<tr><td class="col">status</td><td class="type">character varying(20)</td><td class="req">是</td><td class="note">状态：ACTIVE 启用 / INACTIVE 停用</td></tr>
+<tr><td class="col">max_users</td><td class="type">bigint</td><td class="req">是</td><td class="note">租户最大成员数上限</td></tr>
+<tr><td class="col">max_workspaces</td><td class="type">bigint</td><td class="req">是</td><td class="note">租户最大工作区数上限</td></tr>
+<tr><td class="col">max_daily_articles</td><td class="type">bigint</td><td class="req">是</td><td class="note">每日最大内容产出篇数</td></tr>
+</tbody></table></div>
+<div class="card"><header><div class="name">tenant</div><div class="desc">租户：平台的独立业务空间，是所有业务数据行级隔离的边界</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">code</td><td class="type">citext</td><td class="req">是</td><td class="note">租户编码，全局唯一，用于登录时定位租户</td></tr>
+<tr><td class="col">name</td><td class="type">character varying(160)</td><td class="req">是</td><td class="note">租户名称</td></tr>
+<tr><td class="col">status</td><td class="type">character varying(20)</td><td class="req">是</td><td class="note">状态：ACTIVE 正常 / SUSPENDED 已暂停 / CLOSED 已关闭</td></tr>
+<tr><td class="col">timezone</td><td class="type">character varying(64)</td><td class="req">是</td><td class="note">租户默认时区，用于时间展示与定时调度</td></tr>
+<tr><td class="col">locale</td><td class="type">character varying(20)</td><td class="req">是</td><td class="note">默认语言区域，如 zh-CN</td></tr>
+<tr><td class="col">data_region</td><td class="type">character varying(32)</td><td class="req">是</td><td class="note">数据存储区域标识</td></tr>
+<tr><td class="col">plan_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">关联的套餐 ID</td></tr>
+<tr><td class="col">settings_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">租户配置版本号，配置变更后自增以失效相关缓存</td></tr>
+</tbody></table></div>
+<div class="card"><header><div class="name">tenant_subscription</div><div class="desc">租户订阅：记录租户与套餐的订阅周期、宽限期，同一租户最多一条生效中记录</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">tenant_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">所属租户 ID，行级安全策略（RLS）的隔离依据</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">plan_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">订阅的套餐 ID</td></tr>
+<tr><td class="col">status</td><td class="type">character varying(20)</td><td class="req">是</td><td class="note">状态：PENDING 待生效 / ACTIVE 生效中 / PAST_DUE 已逾期 / CANCELLED 已取消 / EXPIRED 已过期</td></tr>
+<tr><td class="col">starts_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">订阅开始时间</td></tr>
+<tr><td class="col">ends_at</td><td class="type">timestamp with time zone</td><td class="req"></td><td class="note">订阅结束时间，为空表示不限期</td></tr>
+<tr><td class="col">grace_ends_at</td><td class="type">timestamp with time zone</td><td class="req"></td><td class="note">宽限期截止时间，逾期后仍可访问的截止时点</td></tr>
+</tbody></table></div>
+<h2>组织与成员 (organization)</h2>
+<div class="card"><header><div class="name">app_user</div><div class="desc">平台用户：登录账号，跨租户全局唯一，不直接承载租户业务数据</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">email</td><td class="type">citext</td><td class="req">是</td><td class="note">登录邮箱，大小写不敏感，全局唯一</td></tr>
+<tr><td class="col">phone</td><td class="type">character varying(32)</td><td class="req"></td><td class="note">手机号，非空时全局唯一，可用于登录或通知</td></tr>
+<tr><td class="col">password_hash</td><td class="type">character varying(255)</td><td class="req">是</td><td class="note">密码哈希（Argon2），永不返回给客户端</td></tr>
+<tr><td class="col">display_name</td><td class="type">character varying(120)</td><td class="req">是</td><td class="note">用户显示名称</td></tr>
+<tr><td class="col">status</td><td class="type">character varying(20)</td><td class="req">是</td><td class="note">状态：ACTIVE 正常 / DISABLED 已禁用 / LOCKED 已锁定</td></tr>
+<tr><td class="col">mfa_enabled</td><td class="type">boolean</td><td class="req">是</td><td class="note">是否启用多因素认证</td></tr>
+<tr><td class="col">last_login_at</td><td class="type">timestamp with time zone</td><td class="req"></td><td class="note">最近一次登录成功时间</td></tr>
+</tbody></table></div>
+<div class="card"><header><div class="name">tenant_membership</div><div class="desc">租户成员：平台用户在某个租户下的成员身份，是用户进入该租户的唯一入口</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">tenant_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">所属租户 ID，行级安全策略（RLS）的隔离依据</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">user_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">关联的平台用户 ID</td></tr>
+<tr><td class="col">status</td><td class="type">character varying(20)</td><td class="req">是</td><td class="note">状态：INVITED 已邀请 / ACTIVE 正常 / SUSPENDED 已停用 / LEFT 已退出</td></tr>
+<tr><td class="col">member_no</td><td class="type">character varying(64)</td><td class="req"></td><td class="note">租户内成员编号，非空时租户内唯一，用于对外展示</td></tr>
+<tr><td class="col">job_title</td><td class="type">character varying(120)</td><td class="req"></td><td class="note">职位名称</td></tr>
+<tr><td class="col">joined_at</td><td class="type">timestamp with time zone</td><td class="req"></td><td class="note">加入租户的时间，未加入时为空</td></tr>
+</tbody></table></div>
+<div class="card"><header><div class="name">team</div><div class="desc">团队：租户内支持父子层级的组织单元，用于授权与数据范围划分</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">tenant_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">所属租户 ID，行级安全策略（RLS）的隔离依据</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">parent_team_id</td><td class="type">uuid</td><td class="req"></td><td class="note">上级团队 ID，为空表示顶层团队</td></tr>
+<tr><td class="col">code</td><td class="type">citext</td><td class="req">是</td><td class="note">团队编码，租户内唯一</td></tr>
+<tr><td class="col">name</td><td class="type">character varying(120)</td><td class="req">是</td><td class="note">团队名称</td></tr>
+<tr><td class="col">status</td><td class="type">character varying(20)</td><td class="req">是</td><td class="note">状态：ACTIVE 启用 / INACTIVE 停用</td></tr>
+</tbody></table></div>
+<div class="card"><header><div class="name">team_member</div><div class="desc">团队成员：团队与租户成员的多对多关联关系</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">tenant_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">所属租户 ID，行级安全策略（RLS）的隔离依据</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">team_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">关联的团队 ID</td></tr>
+<tr><td class="col">membership_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">关联的租户成员 ID</td></tr>
+<tr><td class="col">is_manager</td><td class="type">boolean</td><td class="req">是</td><td class="note">是否为该团队的负责人</td></tr>
+</tbody></table></div>
+<h2>工作区与品牌 (brand)</h2>
+<div class="card"><header><div class="name">workspace</div><div class="desc">工作区：租户下的内容协作空间，品牌与内容任务均归属于某个工作区</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">tenant_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">所属租户 ID，行级安全策略（RLS）的隔离依据</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">code</td><td class="type">citext</td><td class="req">是</td><td class="note">工作区编码，租户内唯一</td></tr>
+<tr><td class="col">name</td><td class="type">character varying(160)</td><td class="req">是</td><td class="note">工作区名称</td></tr>
+<tr><td class="col">status</td><td class="type">character varying(20)</td><td class="req">是</td><td class="note">状态：ACTIVE 启用 / ARCHIVED 已归档</td></tr>
+<tr><td class="col">default_brand_id</td><td class="type">uuid</td><td class="req"></td><td class="note">默认品牌 ID，新建内容时作为默认品牌</td></tr>
+<tr><td class="col">created_by_membership_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">创建者对应的租户成员 ID</td></tr>
+</tbody></table></div>
+<div class="card"><header><div class="name">brand</div><div class="desc">品牌：内容生产所遵循的品牌设定，含口吻规范与禁用词</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">tenant_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">所属租户 ID，行级安全策略（RLS）的隔离依据</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">workspace_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">所属工作区 ID</td></tr>
+<tr><td class="col">name</td><td class="type">character varying(160)</td><td class="req">是</td><td class="note">品牌名称，同一工作区内唯一</td></tr>
+<tr><td class="col">description</td><td class="type">text</td><td class="req"></td><td class="note">品牌描述</td></tr>
+<tr><td class="col">tone_guideline</td><td class="type">text</td><td class="req"></td><td class="note">品牌口吻规范，供生成内容时约束语气风格</td></tr>
+<tr><td class="col">prohibited_terms</td><td class="type">character varying[]</td><td class="req">是</td><td class="note">禁用词列表，生成内容时禁止出现</td></tr>
+<tr><td class="col">default_language</td><td class="type">character varying(20)</td><td class="req">是</td><td class="note">品牌默认输出语言</td></tr>
+<tr><td class="col">status</td><td class="type">character varying(20)</td><td class="req">是</td><td class="note">状态：ACTIVE 启用 / INACTIVE 停用</td></tr>
+</tbody></table></div>
+<h2>内容生产 (content)</h2>
+<div class="card"><header><div class="name">content_run</div><div class="desc">内容任务：内容生产流程的一次执行实例，对应内容看板上的一行</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">tenant_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">所属租户 ID，行级安全策略（RLS）的隔离依据</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">code</td><td class="type">citext</td><td class="req">是</td><td class="note">任务编码，租户内唯一，对外作为 API 的 id 暴露（如 CR-20260724-018）</td></tr>
+<tr><td class="col">seq</td><td class="type">integer</td><td class="req">是</td><td class="note">租户内递增序号，用于列表稳定排序</td></tr>
+<tr><td class="col">title</td><td class="type">character varying(255)</td><td class="req">是</td><td class="note">内容标题</td></tr>
+<tr><td class="col">brand</td><td class="type">character varying(120)</td><td class="req">是</td><td class="note">所属品牌名称</td></tr>
+<tr><td class="col">stage_label</td><td class="type">character varying(64)</td><td class="req">是</td><td class="note">当前所处阶段的中文文案，如“分段写作”</td></tr>
+<tr><td class="col">status_label</td><td class="type">character varying(64)</td><td class="req">是</td><td class="note">当前状态的中文文案，如“运行中”“等待人工”</td></tr>
+<tr><td class="col">tone</td><td class="type">character varying(16)</td><td class="req">是</td><td class="note">前端展示色调：info 信息 / success 成功 / warning 警告 / danger 异常 / neutral 中性</td></tr>
+<tr><td class="col">owner</td><td class="type">character varying(120)</td><td class="req">是</td><td class="note">负责人显示名</td></tr>
+<tr><td class="col">updated_at_label</td><td class="type">character varying(64)</td><td class="req">是</td><td class="note">最近更新的相对时间展示文案，如“2 分钟前”</td></tr>
+<tr><td class="col">allowed_actions</td><td class="type">character varying[]</td><td class="req">是</td><td class="note">当前状态下前端允许的操作列表，如 view / pause / approve / reject / export / rerun</td></tr>
+</tbody></table></div>
+<div class="card"><header><div class="name">human_task</div><div class="desc">人工任务：流程中需要人工介入的待办，如大纲审核、事实核查、异常处理</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">tenant_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">所属租户 ID，行级安全策略（RLS）的隔离依据</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">code</td><td class="type">citext</td><td class="req">是</td><td class="note">任务编码，租户内唯一（如 HT-201）</td></tr>
+<tr><td class="col">seq</td><td class="type">integer</td><td class="req">是</td><td class="note">租户内递增序号，用于列表稳定排序</td></tr>
+<tr><td class="col">title</td><td class="type">character varying(255)</td><td class="req">是</td><td class="note">任务标题</td></tr>
+<tr><td class="col">type</td><td class="type">character varying(32)</td><td class="req">是</td><td class="note">任务类型，如“大纲审核”“事实核查”“异常处理”</td></tr>
+<tr><td class="col">reason</td><td class="type">text</td><td class="req">是</td><td class="note">触发该人工任务的原因说明，供处理人判断</td></tr>
+<tr><td class="col">priority</td><td class="type">character varying(16)</td><td class="req">是</td><td class="note">优先级文案：普通 / 高</td></tr>
+<tr><td class="col">brand</td><td class="type">character varying(120)</td><td class="req">是</td><td class="note">所属品牌名称</td></tr>
+<tr><td class="col">owner</td><td class="type">character varying(120)</td><td class="req">是</td><td class="note">处理人展示文案，如“已分配给你”“团队任务”</td></tr>
+<tr><td class="col">due_label</td><td class="type">character varying(64)</td><td class="req">是</td><td class="note">截止时间展示文案，如“今天 14:30 到期”</td></tr>
+<tr><td class="col">allowed_actions</td><td class="type">character varying[]</td><td class="req">是</td><td class="note">允许的操作列表，如 approve / reject / reassign / submit / claim</td></tr>
+</tbody></table></div>
+<div class="card"><header><div class="name">material</div><div class="desc">素材：检索到的可引用来源资料，供内容生成时引用与核查</div></header><table><thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead><tbody>
+<tr><td class="col">id</td><td class="type">uuid</td><td class="req">是</td><td class="note">主键，UUIDv7（时间有序），由应用生成</td></tr>
+<tr><td class="col">tenant_id</td><td class="type">uuid</td><td class="req">是</td><td class="note">所属租户 ID，行级安全策略（RLS）的隔离依据</td></tr>
+<tr><td class="col">created_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">创建时间（数据库时区为 UTC）</td></tr>
+<tr><td class="col">created_by</td><td class="type">uuid</td><td class="req"></td><td class="note">创建人用户 ID，系统自动创建时为空</td></tr>
+<tr><td class="col">updated_at</td><td class="type">timestamp with time zone</td><td class="req">是</td><td class="note">最后更新时间</td></tr>
+<tr><td class="col">updated_by</td><td class="type">uuid</td><td class="req"></td><td class="note">最后更新人用户 ID，系统自动更新时为空</td></tr>
+<tr><td class="col">row_version</td><td class="type">bigint</td><td class="req">是</td><td class="note">乐观锁版本号，每次更新自增 1，用于并发冲突检测</td></tr>
+<tr><td class="col">code</td><td class="type">citext</td><td class="req">是</td><td class="note">素材编码，租户内唯一（如 MAT-301）</td></tr>
+<tr><td class="col">seq</td><td class="type">integer</td><td class="req">是</td><td class="note">租户内递增序号，用于列表稳定排序</td></tr>
+<tr><td class="col">title</td><td class="type">character varying(255)</td><td class="req">是</td><td class="note">素材标题</td></tr>
+<tr><td class="col">summary</td><td class="type">text</td><td class="req">是</td><td class="note">素材摘要</td></tr>
+<tr><td class="col">source</td><td class="type">character varying(255)</td><td class="req">是</td><td class="note">来源标识，如域名或“人工上传”</td></tr>
+<tr><td class="col">type</td><td class="type">character varying(32)</td><td class="req">是</td><td class="note">素材类型，如 PDF / 网页 / DOCX / XLSX</td></tr>
+<tr><td class="col">trust_label</td><td class="type">character varying(32)</td><td class="req">是</td><td class="note">可信度标签，如“高可信”“官方来源”“内部资料”“待复核”</td></tr>
+<tr><td class="col">tone</td><td class="type">character varying(16)</td><td class="req">是</td><td class="note">前端展示色调：info 信息 / success 成功 / warning 警告 / danger 异常 / neutral 中性</td></tr>
+<tr><td class="col">updated_at_label</td><td class="type">character varying(64)</td><td class="req">是</td><td class="note">最近更新的相对时间展示文案，如“今天 10:16”</td></tr>
+<tr><td class="col">allowed_actions</td><td class="type">character varying[]</td><td class="req">是</td><td class="note">允许的操作列表，如 view / edit</td></tr>
+</tbody></table></div>
+</body></html>

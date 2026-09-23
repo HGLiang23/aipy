@@ -1,0 +1,222 @@
+[
+  {
+    "step": "login_ok",
+    "status": 200,
+    "body": {
+      "tenant": {
+        "id": "019f91e3-0000-4000-8000-000000000001",
+        "name": "远山内容工作室",
+        "slug": "yuanshan",
+        "timezone": "Asia/Shanghai",
+        "status": "ACTIVE"
+      },
+      "workspace": {
+        "id": "019f91e3-0000-4000-8000-000000000002",
+        "name": "默认工作空间"
+      },
+      "user": {
+        "id": "019f91e3-0000-4000-8000-000000000003",
+        "displayName": "林编辑",
+        "email": "editor@example.com",
+        "roleLabel": "租户管理员",
+        "dataScopes": [
+          "TENANT_ALL"
+        ]
+      },
+      "permissions": [
+        "batch:view",
+        "batch:create",
+        "content:view",
+        "content:create",
+        "content:edit",
+        "content:assign",
+        "artifact:view",
+        "artifact:edit",
+        "artifact:compare",
+        "source:view",
+        "source:create",
+        "source:edit",
+        "source:collect",
+        "workflow:view",
+        "workflow:configure",
+        "workflow:execute",
+        "review:view",
+        "review:claim",
+        "review:approve",
+        "review:reject",
+        "review:reassign",
+        "publication:view",
+        "publication:preview",
+        "publication:export",
+        "model:view",
+        "model:configure",
+        "model:credential_manage",
+        "quota:view",
+        "quota:configure",
+        "member:view",
+        "member:manage",
+        "role:view",
+        "role:manage",
+        "audit:view"
+      ]
+    }
+  },
+  {
+    "step": "login_sets_cookie",
+    "status": 200,
+    "body": [
+      "access_token"
+    ]
+  },
+  {
+    "step": "login_bad_password",
+    "status": 401,
+    "body": {
+      "type": "about:blank",
+      "title": "Unauthorized",
+      "status": 401,
+      "code": "http_error",
+      "detail": "invalid email or password"
+    }
+  },
+  {
+    "step": "login_unknown_user",
+    "status": 401,
+    "body": {
+      "type": "about:blank",
+      "title": "Unauthorized",
+      "status": 401,
+      "code": "http_error",
+      "detail": "invalid email or password"
+    }
+  },
+  {
+    "step": "me_without_cookie",
+    "status": 401,
+    "body": {
+      "type": "about:blank",
+      "title": "Unauthorized",
+      "status": 401,
+      "code": "http_error",
+      "detail": "missing access token"
+    }
+  },
+  {
+    "step": "me_with_cookie",
+    "status": 200,
+    "body": {
+      "tenant": {
+        "id": "019f91e3-0000-4000-8000-000000000001",
+        "name": "远山内容工作室",
+        "slug": "yuanshan",
+        "timezone": "Asia/Shanghai",
+        "status": "ACTIVE"
+      },
+      "workspace": {
+        "id": "019f91e3-0000-4000-8000-000000000002",
+        "name": "默认工作空间"
+      },
+      "user": {
+        "id": "019f91e3-0000-4000-8000-000000000003",
+        "displayName": "林编辑",
+        "email": "editor@example.com",
+        "roleLabel": "租户管理员",
+        "dataScopes": [
+          "TENANT_ALL"
+        ]
+      },
+      "permissions": [
+        "batch:view",
+        "batch:create",
+        "content:view",
+        "content:create",
+        "content:edit",
+        "content:assign",
+        "artifact:view",
+        "artifact:edit",
+        "artifact:compare",
+        "source:view",
+        "source:create",
+        "source:edit",
+        "source:collect",
+        "workflow:view",
+        "workflow:configure",
+        "workflow:execute",
+        "review:view",
+        "review:claim",
+        "review:approve",
+        "review:reject",
+        "review:reassign",
+        "publication:view",
+        "publication:preview",
+        "publication:export",
+        "model:view",
+        "model:configure",
+        "model:credential_manage",
+        "quota:view",
+        "quota:configure",
+        "member:view",
+        "member:manage",
+        "role:view",
+        "role:manage",
+        "audit:view"
+      ]
+    }
+  },
+  {
+    "step": "list_workflow_runs",
+    "status": 200,
+    "body": {
+      "page": 1,
+      "page_size": 20,
+      "total": 5,
+      "items_count": 5
+    }
+  },
+  {
+    "step": "list_human_tasks",
+    "status": 200,
+    "body": {
+      "page": 1,
+      "page_size": 20,
+      "total": 3,
+      "items_count": 3
+    }
+  },
+  {
+    "step": "list_materials",
+    "status": 200,
+    "body": {
+      "page": 1,
+      "page_size": 20,
+      "total": 4,
+      "items_count": 4
+    }
+  },
+  {
+    "step": "detail_workflow_run",
+    "status": 200,
+    "body": {
+      "allowed_actions": [
+        "view",
+        "pause"
+      ],
+      "etag": "\"CR-20260724-018-v0\"",
+      "version": 0,
+      "denial_reason": null,
+      "id": "CR-20260724-018",
+      "title": "AI 搜索如何改变品牌内容策略"
+    }
+  },
+  {
+    "step": "detail_not_found",
+    "status": 404,
+    "body": {
+      "type": "about:blank",
+      "title": "Not Found",
+      "status": 404,
+      "code": "http_error",
+      "detail": "content run not found"
+    }
+  }
+]

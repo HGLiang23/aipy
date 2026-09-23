@@ -1,0 +1,418 @@
+{
+  "alembic_version": "20260724_0004",
+  "foreign_keys": [
+    {
+      "table": "brand",
+      "name": "fk_brand_tenant_id_tenant",
+      "def": "FOREIGN KEY (tenant_id) REFERENCES tenant(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "brand",
+      "name": "fk_brand_tenant_workspace",
+      "def": "FOREIGN KEY (tenant_id, workspace_id) REFERENCES workspace(tenant_id, id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "content_run",
+      "name": "fk_content_run_tenant_id_tenant",
+      "def": "FOREIGN KEY (tenant_id) REFERENCES tenant(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "human_task",
+      "name": "fk_human_task_tenant_id_tenant",
+      "def": "FOREIGN KEY (tenant_id) REFERENCES tenant(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "material",
+      "name": "fk_material_tenant_id_tenant",
+      "def": "FOREIGN KEY (tenant_id) REFERENCES tenant(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "team",
+      "name": "fk_team_tenant_id_tenant",
+      "def": "FOREIGN KEY (tenant_id) REFERENCES tenant(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "team",
+      "name": "fk_team_tenant_parent_team",
+      "def": "FOREIGN KEY (tenant_id, parent_team_id) REFERENCES team(tenant_id, id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "team_member",
+      "name": "fk_team_member_tenant_id_tenant",
+      "def": "FOREIGN KEY (tenant_id) REFERENCES tenant(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "team_member",
+      "name": "fk_team_member_tenant_membership",
+      "def": "FOREIGN KEY (tenant_id, membership_id) REFERENCES tenant_membership(tenant_id, id) ON DELETE CASCADE"
+    },
+    {
+      "table": "team_member",
+      "name": "fk_team_member_tenant_team",
+      "def": "FOREIGN KEY (tenant_id, team_id) REFERENCES team(tenant_id, id) ON DELETE CASCADE"
+    },
+    {
+      "table": "tenant",
+      "name": "fk_tenant_plan_id_plan",
+      "def": "FOREIGN KEY (plan_id) REFERENCES plan(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "tenant_membership",
+      "name": "fk_tenant_membership_tenant_id_tenant",
+      "def": "FOREIGN KEY (tenant_id) REFERENCES tenant(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "tenant_membership",
+      "name": "fk_tenant_membership_user_id_app_user",
+      "def": "FOREIGN KEY (user_id) REFERENCES app_user(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "tenant_subscription",
+      "name": "fk_tenant_subscription_plan_id_plan",
+      "def": "FOREIGN KEY (plan_id) REFERENCES plan(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "tenant_subscription",
+      "name": "fk_tenant_subscription_tenant_id_tenant",
+      "def": "FOREIGN KEY (tenant_id) REFERENCES tenant(id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "workspace",
+      "name": "fk_workspace_tenant_creator_membership",
+      "def": "FOREIGN KEY (tenant_id, created_by_membership_id) REFERENCES tenant_membership(tenant_id, id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "workspace",
+      "name": "fk_workspace_tenant_default_brand",
+      "def": "FOREIGN KEY (tenant_id, default_brand_id) REFERENCES brand(tenant_id, id) ON DELETE RESTRICT"
+    },
+    {
+      "table": "workspace",
+      "name": "fk_workspace_tenant_id_tenant",
+      "def": "FOREIGN KEY (tenant_id) REFERENCES tenant(id) ON DELETE RESTRICT"
+    }
+  ],
+  "rls_policies": [
+    {
+      "table": "brand",
+      "policy": "brand_tenant_isolation",
+      "cmd": "ALL",
+      "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+    },
+    {
+      "table": "content_run",
+      "policy": "content_run_tenant_isolation",
+      "cmd": "ALL",
+      "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+    },
+    {
+      "table": "human_task",
+      "policy": "human_task_tenant_isolation",
+      "cmd": "ALL",
+      "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+    },
+    {
+      "table": "material",
+      "policy": "material_tenant_isolation",
+      "cmd": "ALL",
+      "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+    },
+    {
+      "table": "team",
+      "policy": "team_tenant_isolation",
+      "cmd": "ALL",
+      "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+    },
+    {
+      "table": "team_member",
+      "policy": "team_member_tenant_isolation",
+      "cmd": "ALL",
+      "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+    },
+    {
+      "table": "tenant",
+      "policy": "tenant_tenant_isolation",
+      "cmd": "ALL",
+      "using": "(id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+    },
+    {
+      "table": "tenant_membership",
+      "policy": "tenant_membership_self_lookup",
+      "cmd": "SELECT",
+      "using": "(user_id = (NULLIF(current_setting('app.user_id'::text, true), ''::text))::uuid)"
+    },
+    {
+      "table": "tenant_membership",
+      "policy": "tenant_membership_tenant_isolation",
+      "cmd": "ALL",
+      "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+    },
+    {
+      "table": "tenant_subscription",
+      "policy": "tenant_subscription_tenant_isolation",
+      "cmd": "ALL",
+      "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+    },
+    {
+      "table": "workspace",
+      "policy": "workspace_tenant_isolation",
+      "cmd": "ALL",
+      "using": "(tenant_id = (NULLIF(current_setting('app.tenant_id'::text, true), ''::text))::uuid)"
+    }
+  ],
+  "rls_flags": [
+    {
+      "table": "alembic_version",
+      "enabled": false,
+      "forced": false
+    },
+    {
+      "table": "app_user",
+      "enabled": false,
+      "forced": false
+    },
+    {
+      "table": "brand",
+      "enabled": true,
+      "forced": true
+    },
+    {
+      "table": "content_run",
+      "enabled": true,
+      "forced": true
+    },
+    {
+      "table": "human_task",
+      "enabled": true,
+      "forced": true
+    },
+    {
+      "table": "material",
+      "enabled": true,
+      "forced": true
+    },
+    {
+      "table": "plan",
+      "enabled": false,
+      "forced": false
+    },
+    {
+      "table": "team",
+      "enabled": true,
+      "forced": true
+    },
+    {
+      "table": "team_member",
+      "enabled": true,
+      "forced": true
+    },
+    {
+      "table": "tenant",
+      "enabled": true,
+      "forced": true
+    },
+    {
+      "table": "tenant_membership",
+      "enabled": true,
+      "forced": true
+    },
+    {
+      "table": "tenant_subscription",
+      "enabled": true,
+      "forced": true
+    },
+    {
+      "table": "workspace",
+      "enabled": true,
+      "forced": true
+    }
+  ],
+  "indexes": [
+    {
+      "table": "alembic_version",
+      "index": "alembic_version_pkc"
+    },
+    {
+      "table": "app_user",
+      "index": "pk_app_user"
+    },
+    {
+      "table": "app_user",
+      "index": "uq_app_user_email"
+    },
+    {
+      "table": "app_user",
+      "index": "uq_app_user_phone_not_null"
+    },
+    {
+      "table": "brand",
+      "index": "ix_brand_tenant_workspace_status"
+    },
+    {
+      "table": "brand",
+      "index": "pk_brand"
+    },
+    {
+      "table": "brand",
+      "index": "uq_brand_tenant_id_id"
+    },
+    {
+      "table": "brand",
+      "index": "uq_brand_tenant_workspace_name"
+    },
+    {
+      "table": "content_run",
+      "index": "ix_content_run_tenant_seq"
+    },
+    {
+      "table": "content_run",
+      "index": "pk_content_run"
+    },
+    {
+      "table": "content_run",
+      "index": "uq_content_run_tenant_code"
+    },
+    {
+      "table": "human_task",
+      "index": "ix_human_task_tenant_seq"
+    },
+    {
+      "table": "human_task",
+      "index": "pk_human_task"
+    },
+    {
+      "table": "human_task",
+      "index": "uq_human_task_tenant_code"
+    },
+    {
+      "table": "material",
+      "index": "ix_material_tenant_seq"
+    },
+    {
+      "table": "material",
+      "index": "pk_material"
+    },
+    {
+      "table": "material",
+      "index": "uq_material_tenant_code"
+    },
+    {
+      "table": "plan",
+      "index": "pk_plan"
+    },
+    {
+      "table": "plan",
+      "index": "uq_plan_code"
+    },
+    {
+      "table": "team",
+      "index": "ix_team_tenant_parent_team"
+    },
+    {
+      "table": "team",
+      "index": "pk_team"
+    },
+    {
+      "table": "team",
+      "index": "uq_team_tenant_id_code"
+    },
+    {
+      "table": "team",
+      "index": "uq_team_tenant_id_id"
+    },
+    {
+      "table": "team_member",
+      "index": "ix_team_member_tenant_membership"
+    },
+    {
+      "table": "team_member",
+      "index": "pk_team_member"
+    },
+    {
+      "table": "team_member",
+      "index": "uq_team_member_tenant_id_id"
+    },
+    {
+      "table": "team_member",
+      "index": "uq_team_member_tenant_id_team_id_membership_id"
+    },
+    {
+      "table": "tenant",
+      "index": "ix_tenant_plan_id"
+    },
+    {
+      "table": "tenant",
+      "index": "ix_tenant_status"
+    },
+    {
+      "table": "tenant",
+      "index": "pk_tenant"
+    },
+    {
+      "table": "tenant",
+      "index": "uq_tenant_code"
+    },
+    {
+      "table": "tenant_membership",
+      "index": "ix_tenant_membership_tenant_status"
+    },
+    {
+      "table": "tenant_membership",
+      "index": "ix_tenant_membership_user_status"
+    },
+    {
+      "table": "tenant_membership",
+      "index": "pk_tenant_membership"
+    },
+    {
+      "table": "tenant_membership",
+      "index": "uq_tenant_membership_member_no_not_null"
+    },
+    {
+      "table": "tenant_membership",
+      "index": "uq_tenant_membership_tenant_id_id"
+    },
+    {
+      "table": "tenant_membership",
+      "index": "uq_tenant_membership_tenant_id_user_id"
+    },
+    {
+      "table": "tenant_subscription",
+      "index": "pk_tenant_subscription"
+    },
+    {
+      "table": "tenant_subscription",
+      "index": "uq_tenant_subscription_one_active"
+    },
+    {
+      "table": "tenant_subscription",
+      "index": "uq_tenant_subscription_tenant_id_id"
+    },
+    {
+      "table": "workspace",
+      "index": "ix_workspace_tenant_creator_membership"
+    },
+    {
+      "table": "workspace",
+      "index": "ix_workspace_tenant_default_brand"
+    },
+    {
+      "table": "workspace",
+      "index": "ix_workspace_tenant_status"
+    },
+    {
+      "table": "workspace",
+      "index": "pk_workspace"
+    },
+    {
+      "table": "workspace",
+      "index": "uq_workspace_tenant_id_code"
+    },
+    {
+      "table": "workspace",
+      "index": "uq_workspace_tenant_id_id"
+    }
+  ],
+  "table_count": 13,
+  "tenant_rows_without_context": 0
+}

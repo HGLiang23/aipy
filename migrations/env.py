@@ -8,6 +8,7 @@ from sqlalchemy import engine_from_config, pool
 
 # Register mappings for metadata-driven revision checks without coupling model modules.
 import aipy.modules.brand.models  # noqa: F401, E402
+import aipy.modules.content.models  # noqa: F401, E402
 import aipy.modules.organization.models  # noqa: F401, E402
 import aipy.modules.tenancy.models  # noqa: F401, E402
 from aipy.shared.db import Base

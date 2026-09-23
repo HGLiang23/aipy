@@ -16,6 +16,7 @@ from aipy.shared.db.session import (
     make_session_factory,
     session_scope,
     set_tenant_context,
+    set_user_context,
     tenant_session_scope,
 )
 
@@ -33,5 +34,6 @@ __all__ = [
     "new_uuid7",
     "session_scope",
     "set_tenant_context",
+    "set_user_context",
     "tenant_session_scope",
 ]

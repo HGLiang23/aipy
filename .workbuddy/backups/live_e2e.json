@@ -1,0 +1,222 @@
+[
+  {
+    "step": "POST /api/v1/auth/login",
+    "status": 200,
+    "body": {
+      "tenant": {
+        "id": "019f91e3-0000-4000-8000-000000000001",
+        "name": "远山内容工作室",
+        "slug": "yuanshan",
+        "timezone": "Asia/Shanghai",
+        "status": "ACTIVE"
+      },
+      "workspace": {
+        "id": "019f91e3-0000-4000-8000-000000000002",
+        "name": "默认工作空间"
+      },
+      "user": {
+        "id": "019f91e3-0000-4000-8000-000000000003",
+        "displayName": "林编辑",
+        "email": "editor@example.com",
+        "roleLabel": "租户管理员",
+        "dataScopes": [
+          "TENANT_ALL"
+        ]
+      },
+      "permissions": [
+        "batch:view",
+        "batch:create",
+        "content:view",
+        "content:create",
+        "content:edit",
+        "content:assign",
+        "artifact:view",
+        "artifact:edit",
+        "artifact:compare",
+        "source:view",
+        "source:create",
+        "source:edit",
+        "source:collect",
+        "workflow:view",
+        "workflow:configure",
+        "workflow:execute",
+        "review:view",
+        "review:claim",
+        "review:approve",
+        "review:reject",
+        "review:reassign",
+        "publication:view",
+        "publication:preview",
+        "publication:export",
+        "model:view",
+        "model:configure",
+        "model:credential_manage",
+        "quota:view",
+        "quota:configure",
+        "member:view",
+        "member:manage",
+        "role:view",
+        "role:manage",
+        "audit:view"
+      ]
+    }
+  },
+  {
+    "step": "cookie_received",
+    "status": 200,
+    "body": "access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhaXB5LWRldiIsImF1ZCI6ImFpcHktZGV2Iiwic3ViIjoiMDE5ZjkxZTMtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAzIiwidGVuYW50X2lkIjoiMDE5ZjkxZTMtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAxIiwiYWN0b3JfdHlwZSI6InVzZXIiLCJzaWQiOiJjMDNlNGU4My1hNjZkLTRmODktOWMwNC1lODk1NTc2ODFkY2IiLCJqdGkiOiI5ODIxNDgyZC0wODAyLTQ5OWQtYWU0MS00ZjBhMTkyOGIyZTUiLCJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkwMTUyMDM0LCJleHAiOjE3OTAxNTI5MzQsInJvbGVfaWRzIjpbXSwidGVhbV9pZHMiOltdLCJ3b3Jrc3BhY2VfaWRzIjpbXX0.zVbgFss13Re2XKqi_uaEm99tFiCnfw1pK3G2Zqf9Ick; HttpOnly; Max-Age=899; Path=/; SameSite=lax"
+  },
+  {
+    "step": "GET /api/v1/me (anon)",
+    "status": 401,
+    "body": {
+      "type": "about:blank",
+      "title": "Unauthorized",
+      "status": 401,
+      "code": "http_error",
+      "detail": "missing access token"
+    }
+  },
+  {
+    "step": "GET /api/v1/me",
+    "status": 200,
+    "body": {
+      "tenant": {
+        "id": "019f91e3-0000-4000-8000-000000000001",
+        "name": "远山内容工作室",
+        "slug": "yuanshan",
+        "timezone": "Asia/Shanghai",
+        "status": "ACTIVE"
+      },
+      "workspace": {
+        "id": "019f91e3-0000-4000-8000-000000000002",
+        "name": "默认工作空间"
+      },
+      "user": {
+        "id": "019f91e3-0000-4000-8000-000000000003",
+        "displayName": "林编辑",
+        "email": "editor@example.com",
+        "roleLabel": "租户管理员",
+        "dataScopes": [
+          "TENANT_ALL"
+        ]
+      },
+      "permissions": [
+        "batch:view",
+        "batch:create",
+        "content:view",
+        "content:create",
+        "content:edit",
+        "content:assign",
+        "artifact:view",
+        "artifact:edit",
+        "artifact:compare",
+        "source:view",
+        "source:create",
+        "source:edit",
+        "source:collect",
+        "workflow:view",
+        "workflow:configure",
+        "workflow:execute",
+        "review:view",
+        "review:claim",
+        "review:approve",
+        "review:reject",
+        "review:reassign",
+        "publication:view",
+        "publication:preview",
+        "publication:export",
+        "model:view",
+        "model:configure",
+        "model:credential_manage",
+        "quota:view",
+        "quota:configure",
+        "member:view",
+        "member:manage",
+        "role:view",
+        "role:manage",
+        "audit:view"
+      ]
+    }
+  },
+  {
+    "step": "GET /api/v1/workflow-runs",
+    "status": 200,
+    "body": {
+      "page": 1,
+      "page_size": 20,
+      "total": 5,
+      "items_count": 5
+    }
+  },
+  {
+    "step": "GET /api/v1/human-tasks",
+    "status": 200,
+    "body": {
+      "page": 1,
+      "page_size": 20,
+      "total": 3,
+      "items_count": 3
+    }
+  },
+  {
+    "step": "GET /api/v1/materials",
+    "status": 200,
+    "body": {
+      "page": 1,
+      "page_size": 20,
+      "total": 4,
+      "items_count": 4
+    }
+  },
+  {
+    "step": "GET /api/v1/workflow-runs/CR-20260724-018",
+    "status": 200,
+    "body": {
+      "allowed_actions": [
+        "view",
+        "pause"
+      ],
+      "etag": "\"CR-20260724-018-v0\"",
+      "version": 0,
+      "denial_reason": null,
+      "id": "CR-20260724-018"
+    }
+  },
+  {
+    "step": "POST login wrong password",
+    "status": 401,
+    "body": {
+      "type": "about:blank",
+      "title": "Unauthorized",
+      "status": 401,
+      "code": "http_error",
+      "detail": "invalid email or password"
+    }
+  },
+  {
+    "step": "WEB /",
+    "status": 200,
+    "body": "len=13654"
+  },
+  {
+    "step": "WEB /login",
+    "status": 200,
+    "body": "len=13654"
+  },
+  {
+    "step": "WEB /content",
+    "status": 404,
+    "body": "Not Found"
+  },
+  {
+    "step": "WEB /human-tasks",
+    "status": 404,
+    "body": "Not Found"
+  },
+  {
+    "step": "WEB /materials",
+    "status": 404,
+    "body": "Not Found"
+  }
+]

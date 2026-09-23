@@ -1,8 +1,19 @@
+"use client";
+
 import { Activity, Clock3, FileText, ListTodo, TrendingUp } from "lucide-react";
 import { PageHeader, StatusBadge } from "@/components/ui";
-import { mockContentRuns, mockHumanTasks, mockUsage } from "@/lib/mock-data";
+import { useApiList } from "@/lib/use-api";
+import type { ContentRunSummary, HumanTaskSummary } from "@/lib/types";
+
+const USAGE = { used: 37, limit: 80, resetLabel: "明日 00:00" };
 
 export default function OverviewPage() {
+  const { page: runsPage, loading: runsLoading } = useApiList<ContentRunSummary>("content-runs");
+  const { page: tasksPage, loading: tasksLoading } = useApiList<HumanTaskSummary>("human-tasks");
+
+  const contentRuns = runsPage?.items ?? [];
+  const humanTasks = tasksPage?.items ?? [];
+
   return (
     <div className="page-stack">
       <PageHeader
@@ -21,7 +32,7 @@ export default function OverviewPage() {
         <article className="metric">
           <span className="metric-icon metric-icon-amber"><ListTodo size={18} /></span>
           <span>待人工处理</span>
-          <strong>{mockHumanTasks.length}</strong>
+          <strong>{humanTasks.length}</strong>
           <small>1 项将在今天到期</small>
         </article>
         <article className="metric">
@@ -33,8 +44,8 @@ export default function OverviewPage() {
         <article className="metric">
           <span className="metric-icon metric-icon-neutral"><TrendingUp size={18} /></span>
           <span>生成配额</span>
-          <strong>{mockUsage.used}/{mockUsage.limit}</strong>
-          <small>{mockUsage.resetLabel}重置</small>
+          <strong>{USAGE.used}/{USAGE.limit}</strong>
+          <small>{USAGE.resetLabel}重置</small>
         </article>
       </section>
 
@@ -48,7 +59,8 @@ export default function OverviewPage() {
             <a href="/app/content">查看全部</a>
           </div>
           <div className="compact-list">
-            {mockContentRuns.slice(0, 4).map((run) => (
+            {runsLoading && <p className="table-summary">加载中…</p>}
+            {contentRuns.slice(0, 4).map((run) => (
               <a className="compact-row" href={`/app/content/${run.id}`} key={run.id}>
                 <div>
                   <strong>{run.title}</strong>
@@ -69,7 +81,8 @@ export default function OverviewPage() {
             <a href="/app/human-tasks">处理队列</a>
           </div>
           <div className="compact-list">
-            {mockHumanTasks.slice(0, 4).map((task) => (
+            {tasksLoading && <p className="table-summary">加载中…</p>}
+            {humanTasks.slice(0, 4).map((task) => (
               <div className="compact-row" key={task.id}>
                 <div>
                   <strong>{task.title}</strong>

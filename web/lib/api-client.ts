@@ -51,3 +51,5 @@ export class HttpApiClient implements ApiClient {
   listHumanTasks(query = new URLSearchParams()) { return this.request<Page<HumanTaskSummary>>(`/human-tasks?${query}`); }
   listMaterials(query = new URLSearchParams()) { return this.request<Page<MaterialSummary>>(`/materials?${query}`); }
 }
+
+export const apiClient = new HttpApiClient();

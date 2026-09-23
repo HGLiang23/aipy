@@ -1,9 +1,15 @@
+"use client";
+
 import { FileText, Filter, Link2, Plus, Search, Upload } from "lucide-react";
 import { PermissionGate } from "@/components/permission-gate";
 import { PageHeader, StatusBadge } from "@/components/ui";
-import { mockMaterials } from "@/lib/mock-data";
+import { useApiList } from "@/lib/use-api";
+import type { MaterialSummary } from "@/lib/types";
 
 export default function MaterialsPage() {
+  const { page, loading, error } = useApiList<MaterialSummary>("materials");
+  const materials = page?.items ?? [];
+
   return (
     <div className="page-stack">
       <PageHeader
@@ -23,8 +29,10 @@ export default function MaterialsPage() {
         <label className="search-field"><Search size={17} /><span className="sr-only">搜索素材</span><input placeholder="搜索标题、域名或关键词" /></label>
         <button className="button button-secondary" type="button"><Filter size={16} /> 筛选</button>
       </div>
+      {loading && <p className="table-summary">加载中…</p>}
+      {error && <p className="table-summary">{error}</p>}
       <div className="material-grid">
-        {mockMaterials.map((material) => (
+        {materials.map((material) => (
           <article className="material-row" key={material.id}>
             <span className="file-icon"><FileText size={20} /></span>
             <div className="material-main">

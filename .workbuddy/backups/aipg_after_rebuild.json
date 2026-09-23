@@ -1,0 +1,40 @@
+{
+  "tables": [
+    "alembic_version",
+    "app_user",
+    "brand",
+    "content_run",
+    "human_task",
+    "material",
+    "plan",
+    "team",
+    "team_member",
+    "tenant",
+    "tenant_membership",
+    "tenant_subscription",
+    "workspace"
+  ],
+  "row_counts": {
+    "alembic_version": 1,
+    "app_user": 0,
+    "brand": 0,
+    "content_run": 0,
+    "human_task": 0,
+    "material": 0,
+    "plan": 0,
+    "team": 0,
+    "team_member": 0,
+    "tenant": 0,
+    "tenant_membership": 0,
+    "tenant_subscription": 0,
+    "workspace": 0
+  },
+  "server_version": "PostgreSQL 16.14 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit",
+  "identity": [
+    "aipg_test",
+    "aipg",
+    true
+  ],
+  "backup_path": "D:\\code\\aipy\\.workbuddy\\backups\\_noop.json",
+  "backup_bytes": 99
+}

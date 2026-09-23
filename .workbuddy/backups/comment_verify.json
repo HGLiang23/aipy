@@ -1,0 +1,26 @@
+{
+  "alembic_version": "20260923_0005",
+  "table_count": 13,
+  "tables_without_comment": [
+    "alembic_version"
+  ],
+  "table_comments": {
+    "alembic_version": null,
+    "app_user": "平台用户：登录账号，跨租户全局唯一，不直接承载租户业务数据",
+    "brand": "品牌：内容生产所遵循的品牌设定，含口吻规范与禁用词",
+    "content_run": "内容任务：内容生产流程的一次执行实例，对应内容看板上的一行",
+    "human_task": "人工任务：流程中需要人工介入的待办，如大纲审核、事实核查、异常处理",
+    "material": "素材：检索到的可引用来源资料，供内容生成时引用与核查",
+    "plan": "套餐定义：约束单个租户可用的成员数、工作区数与每日内容产额",
+    "team": "团队：租户内支持父子层级的组织单元，用于授权与数据范围划分",
+    "team_member": "团队成员：团队与租户成员的多对多关联关系",
+    "tenant": "租户：平台的独立业务空间，是所有业务数据行级隔离的边界",
+    "tenant_membership": "租户成员：平台用户在某个租户下的成员身份，是用户进入该租户的唯一入口",
+    "tenant_subscription": "租户订阅：记录租户与套餐的订阅周期、宽限期，同一租户最多一条生效中记录",
+    "workspace": "工作区：租户下的内容协作空间，品牌与内容任务均归属于某个工作区"
+  },
+  "column_count": 162,
+  "columns_without_comment": [
+    "alembic_version.version_num"
+  ]
+}
