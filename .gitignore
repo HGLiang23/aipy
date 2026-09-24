@@ -30,6 +30,9 @@ Thumbs.db
 *.log
 celerybeat-schedule*
 
+# Local agent runtime artifacts (work logs under .workbuddy/memory stay tracked)
+.workbuddy/backups/
+
 # Repository CI must override the user's global .github ignore rule.
 !.github/
 !.github/workflows/

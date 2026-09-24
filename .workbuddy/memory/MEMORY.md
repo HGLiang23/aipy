@@ -36,6 +36,7 @@ cd web; .\node_modules\.bin\next.cmd dev -H 0.0.0.0 -p 3000
 ## 前端路由（易踩）
 - 真实路由在 `/app/*`：`web/app/(workspace)/app/{page.tsx, content/, content/[id]/, human-tasks/, materials/, admin/}`（`(workspace)` 是路由组，不进 URL），另有 `web/app/login`、`web/app/forbidden`。**没有** `/content`、`/human-tasks` 顶层路径。
 - 后端健康检查是 `/health/live`、`/health/ready`（不是 `/healthz`）；`/openapi.json` 可用。
+- **前端必须走同源代理调后端**：`web/next.config.ts` 已配 `rewrites`（`/api/:path*` → `http://localhost:8000/api/:path*`），`web/lib/api-client.ts` 的 `baseUrl` 默认是相对 `/api/v1`（不再直连 `localhost:8000`）。原因：WorkBuddy 预览面板从非 `localhost:3000` 的 origin（如 `172.22.2.169`）访问，直连会被后端 CORS（白名单仅 `localhost:3000`）拦截，且跨端口 cookie 的 `SameSite=Lax` 在 fetch 子请求里不可靠。改了 `next.config.ts` 后 Next.js 会**自动重启**（无需手动杀进程），但 `taskkill /PID x /T` 会误杀 supervisor 进程树导致前端不再被拉起——重启用 supervisor 重新 `run_in_background` 即可。
 
 ## 沙箱与运行（重要）
 - **默认沙箱禁止监听端口**：python / PowerShell / 脱离进程组的子进程，`bind('127.0.0.1')` 与 `bind('0.0.0.0')` 均 `WinError 10013`，限制作用于整棵进程树。
@@ -50,3 +51,34 @@ cd web; .\node_modules\.bin\next.cmd dev -H 0.0.0.0 -p 3000
 
 ## 用户偏好
 - 要简洁、不要冗余；变更摘要用表格；先给结论再列证据；多步改动过程中会反复要求增量确认。
+
+## 管理后台接口备忘（09-24 复核）
+- 7 个 admin 模块中 **6 个有写能力**：members PUT、roles PUT、workflow-templates POST publish、model-credentials POST/test/DELETE、model-routing-policies PUT、quotas PUT。**audit-logs 刻意只读**（BEFORE UPDATE/DELETE 触发器强制 append-only）。
+- `POST /api/v1/model-credentials` 请求体字段为 **snake_case**：`{provider_id, name, secret, ownership_type?}`。若传 camelCase（`provider`/`apiKey`）会得到笼统的 422 `{"detail":"request validation failed"}`，无字段级提示。
+- `DELETE /model-credentials/{id}` 是**撤销**（status→REVOKED，HTTP 204），非物理删除；因此同名重建前需换名或用唯一后缀（smoke 用 `__smoke__{ts}`）。
+- 可用测试账号：`editor@example.com` / `demo-password`。
+- `GET /model-providers` 返回分页对象，需取 `items[0].id` 作为 provider_id。
+
+## 成员新增（09-24）
+- `POST /api/v1/members` 请求体：`{email, displayName, role_id（必填）, job_title?}`。响应 = `CreateMemberResponse`（MemberSummary + `initialPassword` + `accountCreated`）。
+- **`role_id` 必填**：省略时曾回落 `is_default` 角色，而种子里 admin 就是 `is_default=True` → 静默提权。别再引入「默认角色」回落。
+- 邮箱若已是平台用户（`app_user.email` 全局唯一），**复用账号**加入本租户并返回 `initialPassword=null`；已是本租户成员 → 409。
+- 无删除成员接口（有外键指向 `tenant_membership`）；移除语义 = `status='SUSPENDED'`（`PUT /members/{id}`）。
+- `scripts/smoke_admin.py` 27 项；跑完用 `scripts/cleanup_smoke_data.py [--dry-run]` 清 `__smoke__` 残留。
+
+## 构建租户实体的硬性要求
+- `TenantScopedMixin.tenant_id` **无默认值**，必须显式传 `tenant_id=...`。漏了会报 `new row violates row-level security policy for table "<table>"`（是 WITH CHECK 失败，不是缺权限）。
+- API 请求体字段命名在同一文件里**驼峰与下划线混用**（如 `displayName` 配 `role_id`），写仓储前先读 schema，别猜。
+
+## 前端类型检查 / 验证工具
+- `web` 下 `npx tsc --noEmit` 是快速回归（约 13s）。
+- 页面走客户端渲染（`SessionLoader` 以 `GET /me` 为门），**curl 拿到的 HTML 只有「加载中…」**，要看真实渲染必须用浏览器。
+- 本机已装无头 Chrome 工具：`C:/Users/hongguoliang/.workbuddy/binaries/node/workspace/node_modules/.bin/agent-browser`（需 `PATH` 前置 managed node 22；输出**不能走管道**，要重定向到文件；daemon 不跨 Bash 调用存活，登录+操作必须写在同一次调用里）。
+
+## 成员密码重置（09-24）
+- `POST /api/v1/members/{member_id}/reset-password` → 200 `{memberId,displayName,email,password}`；404 不存在；**409 成员非 ACTIVE**；422 非法 UUID。
+- 语义 = 覆盖 `app_user.password_hash`，**旧密码立即失效**（实测旧密码 401）。审计 `member.password_reset` 只记 email/displayName。
+- `app_user` 是**平台级全局账号**（email 全局唯一），重置会影响该账号在**所有租户**的密码 —— 接口设计时须考虑这点，UI 要给二次确认。
+- 登录要求 `TenantMembership.status == "ACTIVE"`（`repositories.py` 的 `authenticate`），所以停用成员重置密码无意义，直接 409。
+- **后端没有权限强制**：`member:manage` 等权限码仅在前端 `PermissionGate` 生效，API 层只校验 `require_tenant` 登录态。所有 admin 写接口都如此，是既有缺口。
+- smoke 现在 33 项；`scripts/cleanup_smoke_data.py` 会清 `__smoke__` 成员/凭证/路由策略。

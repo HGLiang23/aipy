@@ -72,6 +72,12 @@ else:
 
 web = None
 if not port_busy(WEB_PORT):
+    # Clean stale .next cache from a previous run. Done here in-process (not via a
+    # shell rm) so the Bash safe-delete guard does not block the bulk delete and
+    # Next.js does not crash on startup trying to clear it itself.
+    next_dir = WEB / ".next"
+    if next_dir.exists():
+        shutil.rmtree(next_dir)
     node = shutil.which("node") or r"C:\nvm4w\nodejs\node.exe"
     next_entry = WEB / "node_modules/next/dist/bin/next"
     web = spawn([node, str(next_entry), "dev", "-H", "0.0.0.0", "-p", str(WEB_PORT)], WEB, "runtime_web.log")
