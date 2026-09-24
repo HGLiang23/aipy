@@ -82,3 +82,10 @@ cd web; .\node_modules\.bin\next.cmd dev -H 0.0.0.0 -p 3000
 - 登录要求 `TenantMembership.status == "ACTIVE"`（`repositories.py` 的 `authenticate`），所以停用成员重置密码无意义，直接 409。
 - **后端没有权限强制**：`member:manage` 等权限码仅在前端 `PermissionGate` 生效，API 层只校验 `require_tenant` 登录态。所有 admin 写接口都如此，是既有缺口。
 - smoke 现在 33 项；`scripts/cleanup_smoke_data.py` 会清 `__smoke__` 成员/凭证/路由策略。
+
+## Git 与仓库约定（09-24 起）
+- 远程 `git@github.com:HGLiang23/aipy.git`，主分支 `main`；提交信息用 **Conventional Commits + 中文正文**（此前历史只有 "up" / "initial project snapshot"，无规范）。
+- 拆分习惯：按层拆 commit（db / api / web / chore），保证各自可独立回滚。
+- `.gitignore` 忽略 `.workbuddy/backups/`（运行时产物），但 **`.workbuddy/memory/*.md` 是跟踪的**，会随改动一起提交。
+- `git push` 时报 `known_hosts Permission denied` 属正常噪声（SSH 写不进 known_hosts），推送仍成功。
+- `web/next.config.ts` 的 `allowedDevOrigins` 含内网 IP、rewrites 硬编码 `localhost:8000`，部署前需改造。
