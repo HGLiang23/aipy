@@ -15,7 +15,7 @@ from sqlalchemy import (
     text,
 )
 from sqlalchemy.dialects.postgresql import CITEXT
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from aipy.shared.db import Base, EntityMixin, TenantEntityMixin
 
@@ -80,6 +80,10 @@ class TenantMembership(TenantEntityMixin, Base):
     user_id: Mapped[UUID] = mapped_column(
         ForeignKey("app_user.id", ondelete="RESTRICT"), comment="关联的平台用户 ID"
     )
+    role_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("role.id", ondelete="SET NULL"), nullable=True,
+        comment="关联的角色 ID，为空时使用租户默认角色"
+    )
     status: Mapped[str] = mapped_column(
         String(20),
         nullable=False,
@@ -93,6 +97,9 @@ class TenantMembership(TenantEntityMixin, Base):
     joined_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), comment="加入租户的时间，未加入时为空"
     )
+
+    # relationships
+    role: Mapped["Role"] = relationship("Role", back_populates="memberships")
 
 
 class Team(TenantEntityMixin, Base):
