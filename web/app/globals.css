@@ -253,3 +253,66 @@ td small { display: block; margin-top: 4px; color: #89908c; font-size: 10px; }
   .material-main > div { align-items: flex-start; flex-direction: column; }
   .login-panel { padding: 25px 21px; }
 }
+
+/* ── Workflow template admin ─────────────────────────────────────── */
+.muted { color: var(--muted); font-size: 11px; }
+.split-layout { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 18px; align-items: start; }
+.row-selected { background: var(--primary-soft); }
+.row-selected td { background: transparent; }
+.detail-panel { display: grid; gap: 16px; padding: 18px; background: white; border: 1px solid var(--border); border-radius: 7px; position: sticky; top: 18px; }
+.detail-head { display: flex; align-items: flex-start; gap: 11px; color: var(--primary); }
+.detail-head > div { min-width: 0; display: grid; gap: 4px; }
+.detail-head strong { font-size: 15px; color: #1a261f; }
+.node-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.node-list li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 11px; align-items: start; padding: 11px 0; border-top: 1px solid var(--border); }
+.detail-panel .node-list li:has(.candidate-body) { grid-template-columns: 26px minmax(0, 1fr) auto; }
+.node-seq { width: 26px; height: 26px; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--primary); background: var(--primary-soft); border-radius: 50%; }
+.node-list li > div { min-width: 0; display: grid; gap: 3px; }
+.node-list li strong { font-size: 13px; }
+.primary-button { display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 15px; color: white; background: var(--primary); border: 0; border-radius: 5px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.primary-button:hover { background: var(--primary-strong); }
+.primary-button:disabled { opacity: .5; cursor: not-allowed; }
+@media (max-width: 1080px) { .split-layout { grid-template-columns: 1fr; } .detail-panel { position: static; } }
+
+/* ── Audit log diff ──────────────────────────────────────────────── */
+.toolbar select { border: 0; background: transparent; font: inherit; color: inherit; outline: 0; cursor: pointer; }
+.audit-diff { display: grid; gap: 12px; }
+.audit-diff > div { display: grid; gap: 6px; }
+.audit-diff pre { margin: 0; padding: 11px 13px; overflow-x: auto; font-size: 12px; line-height: 1.5; background: var(--subtle); border: 1px solid var(--border); border-radius: 5px; }
+
+/* ── Model credentials ───────────────────────────────────────────── */
+.credential-form { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) auto; gap: 12px; align-items: end; padding: 18px; background: white; border: 1px solid var(--border); border-radius: 7px; }
+.credential-form label { display: grid; gap: 7px; font-size: 12px; font-weight: 700; }
+.credential-form input, .credential-form select { height: 40px; padding: 0 11px; border: 1px solid var(--border-strong); border-radius: 5px; outline: 0; background: white; font: inherit; }
+.credential-form input:focus, .credential-form select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(23,107,77,.12); }
+.data-table code { padding: 2px 7px; font-size: 12px; background: var(--subtle); border: 1px solid var(--border); border-radius: 4px; }
+.row-actions { display: flex; gap: 6px; }
+@media (max-width: 1080px) { .credential-form { grid-template-columns: 1fr 1fr; } }
+
+/* ── Model routing policy ────────────────────────────────────────── */
+.policy-form { display: grid; gap: 12px; }
+.policy-form label, .candidate-body label { display: grid; gap: 6px; font-size: 12px; font-weight: 700; }
+.policy-form input, .candidate-body input, .candidate-body select { height: 38px; padding: 0 10px; border: 1px solid var(--border-strong); border-radius: 5px; outline: 0; background: white; font: inherit; width: 100%; }
+.policy-form input:focus, .candidate-body input:focus, .candidate-body select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(23,107,77,.12); }
+.policy-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.candidate-head { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; font-size: 12px; font-weight: 700; }
+.candidate-body { display: grid; gap: 9px; }
+.checkbox-row { display: flex !important; grid-template-columns: none; align-items: center; gap: 8px; font-weight: 400; }
+.checkbox-row input { width: auto; height: auto; }
+
+/* ── Quota & alerts ──────────────────────────────────────────────── */
+.quota-usage { display: grid; gap: 5px; min-width: 120px; }
+.quota-use { font-size: 12px; }
+.quota-bar { height: 5px; width: 100%; overflow: hidden; background: var(--subtle); border: 1px solid var(--border); border-radius: 3px; }
+.quota-bar span { display: block; height: 100%; background: var(--primary); }
+
+/* ── Members ─────────────────────────────────────────────────────── */
+.user-cell { display: flex; align-items: center; gap: 10px; }
+.user-cell > div { display: grid; gap: 2px; min-width: 0; }
+.user-cell small { color: var(--muted); font-size: 11px; }
+.avatar-sm { width: 30px; height: 30px; font-size: 13px; flex: none; }
+.role-tag { display: inline-flex; align-items: center; gap: 5px; color: var(--primary-strong); font-size: 12px; }
+/* One-time initial password: shown after a successful create, never again. */
+.onetime-secret { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 16px 18px; background: #fff8e6; border: 1px solid #e8c46a; border-radius: 7px; }
+.onetime-secret > div:first-child { display: grid; gap: 4px; flex: 1 1 320px; }
+.onetime-secret code { padding: 6px 12px; font-size: 15px; font-weight: 700; letter-spacing: .04em; background: white; border: 1px solid var(--border-strong); border-radius: 5px; user-select: all; }

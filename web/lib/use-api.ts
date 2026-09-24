@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { apiClient } from "@/lib/api-client";
 import type { Page } from "@/lib/api-client";
 
-type ListKind = "content-runs" | "human-tasks" | "materials";
+type ListKind = "content-runs" | "human-tasks" | "materials" | "members" | "workflow-templates" | "audit-logs" | "model-credentials";
 
 export function useApiList<T>(kind: ListKind) {
   const [page, setPage] = useState<Page<T> | null>(null);
@@ -19,7 +19,15 @@ export function useApiList<T>(kind: ListKind) {
         ? apiClient.listContentRuns()
         : kind === "human-tasks"
           ? apiClient.listHumanTasks()
-          : apiClient.listMaterials();
+          : kind === "materials"
+            ? apiClient.listMaterials()
+            : kind === "members"
+              ? apiClient.listMembers()
+              : kind === "workflow-templates"
+                ? apiClient.listWorkflowTemplates()
+                : kind === "audit-logs"
+                  ? apiClient.listAuditLogs()
+                  : apiClient.listModelCredentials();
 
     promise
       .then((data) => {
