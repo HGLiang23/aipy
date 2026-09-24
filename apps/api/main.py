@@ -14,6 +14,13 @@ from .routes.auth import router as auth_router
 from .routes.workflow_runs import router as workflow_runs_router
 from .routes.human_tasks import router as human_tasks_router
 from .routes.materials import router as materials_router
+from .routes.members import router as members_router
+from .routes.roles import router as roles_router
+from .routes.workflow_templates import router as workflow_templates_router
+from .routes.audit_logs import router as audit_logs_router
+from .routes.model_credentials import router as model_credentials_router
+from .routes.model_routing import router as model_routing_router
+from .routes.quotas import router as quotas_router
 from .schemas import ProblemDetails
 
 
@@ -59,6 +66,13 @@ def create_app(
     application.include_router(workflow_runs_router, prefix="/api/v1")
     application.include_router(human_tasks_router, prefix="/api/v1")
     application.include_router(materials_router, prefix="/api/v1")
+    application.include_router(members_router, prefix="/api/v1")
+    application.include_router(roles_router, prefix="/api/v1")
+    application.include_router(workflow_templates_router, prefix="/api/v1")
+    application.include_router(audit_logs_router, prefix="/api/v1")
+    application.include_router(model_credentials_router, prefix="/api/v1")
+    application.include_router(model_routing_router, prefix="/api/v1")
+    application.include_router(quotas_router, prefix="/api/v1")
     return application
 
 
