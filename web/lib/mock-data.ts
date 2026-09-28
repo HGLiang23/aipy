@@ -14,17 +14,17 @@ export const mockSession: TenantSession = {
 };
 
 export const mockContentRuns: ContentRunSummary[] = [
-  { id: "CR-20260724-018", title: "AI 搜索如何改变品牌内容策略", brand: "远山商业", stageLabel: "分段写作", statusLabel: "运行中", tone: "info", owner: "林编辑", updatedAt: "2 分钟前", allowed_actions: ["view", "pause"], etag: '"run-v8"', version: 8 },
-  { id: "CR-20260724-017", title: "周末城市轻徒步路线清单", brand: "慢游计划", stageLabel: "大纲审核", statusLabel: "等待人工", tone: "warning", owner: "周岚", updatedAt: "18 分钟前", allowed_actions: ["view", "approve", "reject"], etag: '"run-v5"', version: 5 },
-  { id: "CR-20260724-014", title: "团队知识库落地的五个误区", brand: "远山商业", stageLabel: "平台适配", statusLabel: "运行中", tone: "info", owner: "林编辑", updatedAt: "42 分钟前", allowed_actions: ["view", "pause"], etag: '"run-v12"', version: 12 },
-  { id: "CR-20260724-011", title: "新消费品牌七月观察", brand: "趋势手记", stageLabel: "发布包", statusLabel: "已完成", tone: "success", owner: "陈知", updatedAt: "今天 09:20", allowed_actions: ["view", "export"], etag: '"run-v14"', version: 14 },
-  { id: "CR-20260723-096", title: "内容团队如何配置模型预算", brand: "远山商业", stageLabel: "事实检查", statusLabel: "需要处理", tone: "danger", owner: "林编辑", updatedAt: "昨天 18:06", allowed_actions: ["view", "rerun"], etag: '"run-v9"', version: 9 },
+  { id: "CR-20260724-018", title: "AI 搜索如何改变品牌内容策略", brand: "远山商业", stageLabel: "分段写作", status: "RUNNING", statusLabel: "运行中", tone: "info", owner: "林编辑", updatedAt: "2 分钟前", allowed_actions: ["view", "pause"], etag: '"run-v8"', version: 8 },
+  { id: "CR-20260724-017", title: "周末城市轻徒步路线清单", brand: "慢游计划", stageLabel: "大纲审核", status: "WAITING_HUMAN", statusLabel: "等待人工", tone: "warning", owner: "周岚", updatedAt: "18 分钟前", allowed_actions: ["view", "approve", "reject"], etag: '"run-v5"', version: 5 },
+  { id: "CR-20260724-014", title: "团队知识库落地的五个误区", brand: "远山商业", stageLabel: "平台适配", status: "RUNNING", statusLabel: "运行中", tone: "info", owner: "林编辑", updatedAt: "42 分钟前", allowed_actions: ["view", "pause"], etag: '"run-v12"', version: 12 },
+  { id: "CR-20260724-011", title: "新消费品牌七月观察", brand: "趋势手记", stageLabel: "发布包", status: "COMPLETED", statusLabel: "已完成", tone: "success", owner: "陈知", updatedAt: "今天 09:20", allowed_actions: ["view", "export"], etag: '"run-v14"', version: 14 },
+  { id: "CR-20260723-096", title: "内容团队如何配置模型预算", brand: "远山商业", stageLabel: "事实检查", status: "FAILED", statusLabel: "需要处理", tone: "danger", owner: "林编辑", updatedAt: "昨天 18:06", allowed_actions: ["view", "rerun"], etag: '"run-v9"', version: 9 },
 ];
 
 export const mockHumanTasks: HumanTaskSummary[] = [
-  { id: "HT-201", title: "审核《周末城市轻徒步路线清单》大纲", type: "大纲审核", reason: "人机协同模板在大纲节点要求人工确认。", priority: "高", brand: "慢游计划", owner: "已分配给你", dueLabel: "今天 14:30 到期", allowed_actions: ["approve", "reject", "reassign"], etag: '"task-v4"', version: 4 },
-  { id: "HT-198", title: "确认新消费品牌观察的引用来源", type: "事实核查", reason: "两条行业数据缺少一级来源。", priority: "普通", brand: "趋势手记", owner: "已分配给你", dueLabel: "今天 18:00 到期", allowed_actions: ["submit", "reassign"], etag: '"task-v2"', version: 2 },
-  { id: "HT-193", title: "处理模型预算文章的质量门禁", type: "异常处理", reason: "事实检查评分 72，低于租户阈值 80。", priority: "普通", brand: "远山商业", owner: "团队任务", dueLabel: "明天 10:00 到期", allowed_actions: ["claim"], etag: '"task-v1"', version: 1 },
+  { id: "HT-201", title: "审核《周末城市轻徒步路线清单》大纲", type: "大纲审核", reason: "人机协同模板在大纲节点要求人工确认。", priority: "高", brand: "慢游计划", owner: "已分配给你", dueLabel: "今天 14:30 到期", statusLabel: "处理中", allowed_actions: ["approve", "reject", "reassign"], etag: '"task-v4"', version: 4 },
+  { id: "HT-198", title: "确认新消费品牌观察的引用来源", type: "事实核查", reason: "两条行业数据缺少一级来源。", priority: "普通", brand: "趋势手记", owner: "已分配给你", dueLabel: "今天 18:00 到期", statusLabel: "处理中", allowed_actions: ["submit", "reassign"], etag: '"task-v2"', version: 2 },
+  { id: "HT-193", title: "处理模型预算文章的质量门禁", type: "异常处理", reason: "事实检查评分 72，低于租户阈值 80。", priority: "普通", brand: "远山商业", owner: "团队任务", dueLabel: "明天 10:00 到期", statusLabel: "待领取", allowed_actions: ["claim"], etag: '"task-v1"', version: 1 },
 ];
 
 export const mockMaterials: MaterialSummary[] = [
