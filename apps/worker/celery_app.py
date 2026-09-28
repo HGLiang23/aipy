@@ -13,3 +13,7 @@ celery_app.conf.update(
     task_serializer="json",
     timezone="UTC",
 )
+# Discover task modules so a worker process picks up `apps.worker.tasks` without
+# an explicit import list.
+celery_app.autodiscover_tasks(["apps.worker"])
+celery_app.conf.task_routes = {"content.run.execute": {"queue": "content"}}
