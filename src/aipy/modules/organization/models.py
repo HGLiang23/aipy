@@ -121,6 +121,79 @@ class Team(TenantEntityMixin, Base):
     )
 
 
+class Role(TenantEntityMixin, Base):
+    __tablename__ = "role"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "id"),
+        UniqueConstraint("tenant_id", "code"),
+        CheckConstraint("status IN ('ACTIVE', 'INACTIVE')", name="status_allowed"),
+        {"comment": "角色：租户内可分配给成员的权限集合，系统预置角色不允许删除"},
+    )
+
+    code: Mapped[str] = mapped_column(
+        CITEXT(),
+        nullable=False,
+        comment="角色编码，租户内唯一，系统预置为 admin/editor/reviewer/member",
+    )
+    name: Mapped[str] = mapped_column(String(64), nullable=False, comment="角色名称")
+    description: Mapped[str | None] = mapped_column(String(255), comment="角色用途说明")
+    is_system: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, comment="是否为系统预置角色，预置角色不允许删除"
+    )
+    status: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        default="ACTIVE",
+        comment="状态：ACTIVE 启用 / INACTIVE 停用，停用后其权限不再生效",
+    )
+
+
+class RolePermission(TenantEntityMixin, Base):
+    __tablename__ = "role_permission"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "id"),
+        UniqueConstraint("tenant_id", "role_id", "permission_code"),
+        ForeignKeyConstraint(
+            ["tenant_id", "role_id"],
+            ["role.tenant_id", "role.id"],
+            name="fk_role_permission_tenant_role",
+            ondelete="CASCADE",
+        ),
+        Index("ix_role_permission_tenant_role", "tenant_id", "role_id"),
+        {"comment": "角色权限：角色与权限码的多对多关联，权限码格式为 resource:action"},
+    )
+
+    role_id: Mapped[UUID] = mapped_column(nullable=False, comment="关联的角色 ID")
+    permission_code: Mapped[str] = mapped_column(
+        String(64), nullable=False, comment="权限码，格式 resource:action，如 content:approve"
+    )
+
+
+class MembershipRole(TenantEntityMixin, Base):
+    __tablename__ = "membership_role"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "id"),
+        UniqueConstraint("tenant_id", "membership_id", "role_id"),
+        ForeignKeyConstraint(
+            ["tenant_id", "membership_id"],
+            ["tenant_membership.tenant_id", "tenant_membership.id"],
+            name="fk_membership_role_tenant_membership",
+            ondelete="CASCADE",
+        ),
+        ForeignKeyConstraint(
+            ["tenant_id", "role_id"],
+            ["role.tenant_id", "role.id"],
+            name="fk_membership_role_tenant_role",
+            ondelete="CASCADE",
+        ),
+        Index("ix_membership_role_tenant_membership", "tenant_id", "membership_id"),
+        {"comment": "成员角色：租户成员与角色的多对多关联，一人多角色时权限取并集"},
+    )
+
+    membership_id: Mapped[UUID] = mapped_column(nullable=False, comment="关联的租户成员 ID")
+    role_id: Mapped[UUID] = mapped_column(nullable=False, comment="关联的角色 ID")
+
+
 class TeamMember(TenantEntityMixin, Base):
     __tablename__ = "team_member"
     __table_args__ = (
