@@ -1,11 +1,17 @@
 """Role-based access control persistence models."""
 
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from sqlalchemy import Boolean, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from aipy.shared.db import Base, TenantEntityMixin
+
+if TYPE_CHECKING:
+    # Imported only for type checking: a runtime import would cycle back through
+    # ``organization.models`` (which re-exports ``Role`` from this module).
+    from aipy.modules.organization.models import TenantMembership
 
 
 class Role(TenantEntityMixin, Base):

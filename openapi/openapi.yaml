@@ -2,7 +2,14 @@ openapi: 3.1.0
 info:
   title: AIPY API
   version: 0.1.0
-  description: MVP contract for the multi-tenant content workflow platform.
+  description: |
+    MVP contract draft for the multi-tenant content workflow platform.
+
+    WARNING: this document is hand-written and does NOT match the implementation.
+    It still uses `/session`, `/content-runs` and `/decisions`, while the running
+    app exposes `/me`, `/workflow-runs` and `/actions`. The authoritative route
+    list is whatever `create_app().openapi()` returns; regenerate before relying
+    on this file.
 servers:
   - url: /api/v1
 security:

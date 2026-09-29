@@ -17,22 +17,18 @@ export default function AdminPage() {
   return (
     <div className="page-stack">
       <PageHeader eyebrow="租户设置" title="系统管理" description="管理当前租户的组织、权限和内容生产策略。" />
+      <p className="table-summary">这些模块的接口尚未实现，入口暂不可进入；按钮已置灰，避免点开空白页。</p>
       <div className="admin-list">
         {adminSections.map((section) => (
           <PermissionGate key={section.title} permission={section.permission}>
-            {section.href ? (
-              <Link className="admin-row" href={section.href}>
-                <span className="admin-icon"><section.icon size={19} /></span>
-                <span><strong>{section.title}</strong><small>{section.description}</small></span>
-                <ChevronRight size={18} aria-hidden="true" />
-              </Link>
-            ) : (
-              <div className="admin-row admin-row-disabled" aria-disabled="true">
-                <span className="admin-icon"><section.icon size={19} /></span>
-                <span><strong>{section.title}</strong><small>{section.description}（开发中）</small></span>
-                <ChevronRight size={18} aria-hidden="true" />
-              </div>
-            )}
+            <button className="admin-row" type="button" disabled aria-disabled="true" title={`${section.title}尚未实现`}>
+              <span className="admin-icon"><section.icon size={19} /></span>
+              <span>
+                <strong>{section.title}<span className="admin-badge">待开放</span></strong>
+                <small>{section.description}</small>
+              </span>
+              <ChevronRight size={18} aria-hidden="true" />
+            </button>
           </PermissionGate>
         ))}
       </div>

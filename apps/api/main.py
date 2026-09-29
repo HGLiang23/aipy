@@ -1,35 +1,38 @@
-from fastapi import FastAPI, HTTPException
+from http import HTTPStatus
+
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from http import HTTPStatus
 
 from aipy import __version__
 from aipy.shared.config import AppSettings, get_settings
 
-from .dependencies import get_session_factory
-from .routes.health import ReadinessCheck
-from .routes.health import router as health_router
+from .dependencies import get_jwt_service, get_session_factory
+from .middleware import RequestIdMiddleware
+from .routes.audit_logs import router as audit_logs_router
 from .routes.auth import router as auth_router
-from .routes.workflow_runs import router as workflow_runs_router
+from .routes.health import ReadinessCheck, default_readiness_checks
+from .routes.health import router as health_router
 from .routes.human_tasks import router as human_tasks_router
 from .routes.materials import router as materials_router
 from .routes.members import router as members_router
-from .routes.roles import router as roles_router
-from .routes.workflow_templates import router as workflow_templates_router
-from .routes.audit_logs import router as audit_logs_router
 from .routes.model_credentials import router as model_credentials_router
 from .routes.model_routing import router as model_routing_router
+from .routes.organization import router as organization_router
 from .routes.quotas import router as quotas_router
+from .routes.roles import router as roles_router
+from .routes.workflow_runs import router as workflow_runs_router
+from .routes.workflow_templates import router as workflow_templates_router
 from .schemas import ProblemDetails
 
 
-def _problem(status_code: int, detail: str | None) -> JSONResponse:
+def _problem(status_code: int, detail: str | None, code: str = "http_error") -> JSONResponse:
     pd = ProblemDetails(
         status=status_code,
         title=HTTPStatus(status_code).phrase,
         detail=detail,
-        code="http_error",
+        code=code,
     )
     return JSONResponse(status_code=status_code, content=pd.model_dump())
 
@@ -46,13 +49,25 @@ def create_app(
         debug=resolved_settings.debug,
     )
     application.state.settings = resolved_settings
-    application.state.readiness_checks = readiness_checks or {}
     # Warm the engine/session factory so connection errors surface at startup.
     application.state.session_factory = get_session_factory()
+    # Readiness must prove the real dependencies are reachable; only an explicit
+    # mapping from the caller (tests) replaces the default database/Redis probes.
+    application.state.readiness_checks = (
+        readiness_checks
+        if readiness_checks is not None
+        else default_readiness_checks(
+            application.state.session_factory, resolved_settings.redis.url
+        )
+    )
+    # Build the token service eagerly: a missing signing key must fail at boot,
+    # not halfway through the first login.
+    application.state.jwt_service = get_jwt_service()
 
+    application.add_middleware(RequestIdMiddleware)
     application.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000"],
+        allow_origins=resolved_settings.cors_origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -73,15 +88,22 @@ def create_app(
     application.include_router(model_credentials_router, prefix="/api/v1")
     application.include_router(model_routing_router, prefix="/api/v1")
     application.include_router(quotas_router, prefix="/api/v1")
+    application.include_router(organization_router, prefix="/api/v1")
     return application
 
 
-async def _http_exception_handler(request, exc: HTTPException) -> JSONResponse:
-    detail = exc.detail if isinstance(exc.detail, str) else None
-    return _problem(exc.status_code, detail)
+async def _http_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    assert isinstance(exc, HTTPException)
+    if isinstance(exc.detail, dict):
+        return _problem(
+            exc.status_code,
+            exc.detail.get("detail"),
+            exc.detail.get("code", "http_error"),
+        )
+    return _problem(exc.status_code, exc.detail if isinstance(exc.detail, str) else None)
 
 
-async def _validation_handler(request, exc: RequestValidationError) -> JSONResponse:
+async def _validation_handler(request: Request, exc: Exception) -> JSONResponse:
     return _problem(422, "request validation failed")
 
 

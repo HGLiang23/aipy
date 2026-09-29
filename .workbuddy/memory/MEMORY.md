@@ -32,11 +32,25 @@ cd web; .\node_modules\.bin\next.cmd dev -H 0.0.0.0 -p 3000
 - `make_session_factory` 是 `autoflush=False`：`add()` 后需显式 `flush()` 才能被 `Session.get` 看到。
 - 租户表 `FORCE RLS` 且 `aipg` 非超级用户 → **不设 `app.tenant_id` 时任何查询都返回 0 行**，做备份/巡检前要 `ALTER TABLE ... DISABLE ROW LEVEL SECURITY`。
 - 路由里调用仓储函数要写 `repositories.xxx`，否则被同名路由函数遮蔽导致自调用。
+- **手工写迁移必须对齐 `NAMING_CONVENTION`**：`ck_<table>_<constraint_name>`、多列唯一约束列名全拼
+  （`uq_role_tenant_id_code`）、`fk_<table>_tenant_id_tenant`；别漏 `TenantScopedMixin` 自带的 tenant FK。
+- **无库也能验证迁移零漂移**：ORM metadata 用 `postgresql.dialect()` 编译 `CreateTable/CreateIndex`，
+  与 `alembic upgrade <rev>:head --sql`（offline，不连库）做「约束名/索引名/COMMENT 文本」集合对称差；
+  注释要从 `table.comment`/`column.comment` 取（编译产物不含 COMMENT）。
+- **复合外键 `(tenant_id, x_id) → x(tenant_id, id)` 要求目标表存在 `UNIQUE(tenant_id, id)`**，只有 PK(id) 不够；
+  否则 PG 在建表时直接报 `there is no unique constraint matching given keys`。加列的唯一约束名按
+  `NAMING_CONVENTION` 生成即 `uq_<table>_tenant_id_id`。
 
 ## 前端路由（易踩）
 - 真实路由在 `/app/*`：`web/app/(workspace)/app/{page.tsx, content/, content/[id]/, human-tasks/, materials/, admin/}`（`(workspace)` 是路由组，不进 URL），另有 `web/app/login`、`web/app/forbidden`。**没有** `/content`、`/human-tasks` 顶层路径。
 - 后端健康检查是 `/health/live`、`/health/ready`（不是 `/healthz`）；`/openapi.json` 可用。
 - **前端必须走同源代理调后端**：`web/next.config.ts` 已配 `rewrites`（`/api/:path*` → `http://localhost:8000/api/:path*`），`web/lib/api-client.ts` 的 `baseUrl` 默认是相对 `/api/v1`（不再直连 `localhost:8000`）。原因：WorkBuddy 预览面板从非 `localhost:3000` 的 origin（如 `172.22.2.169`）访问，直连会被后端 CORS（白名单仅 `localhost:3000`）拦截，且跨端口 cookie 的 `SameSite=Lax` 在 fetch 子请求里不可靠。改了 `next.config.ts` 后 Next.js 会**自动重启**（无需手动杀进程），但 `taskkill /PID x /T` 会误杀 supervisor 进程树导致前端不再被拉起——重启用 supervisor 重新 `run_in_background` 即可。
+- **枚举后端路由要展开 `_IncludedRouter`**：fastapi 0.141.1 / starlette 1.7.0 下 `app.routes` 里
+  `include_router` 挂进来的不是 `APIRoute` 而是 `_IncludedRouter`（`path`/`methods` 都是 `None`），
+  直接遍历只会看到 `/docs`、`/openapi.json`、`/redoc` 4 条默认路由、误判成「没有业务路由」。
+  正确做法：`r.original_router.routes` 取子路由，路径前缀从 `r.include_context.prefix` 取。
+- 起 app 做路由清单需要合法 JWT key（≥32 字符），否则 `create_app()` 直接抛 `ValidationError`：
+  `AIPY_JWT__SECRET_KEY="$(printf 'k%.0s' {1..40})" .venv/bin/python -c ...`。
 
 ## 沙箱与运行（重要）
 - **默认沙箱禁止监听端口**：python / PowerShell / 脱离进程组的子进程，`bind('127.0.0.1')` 与 `bind('0.0.0.0')` 均 `WinError 10013`，限制作用于整棵进程树。
@@ -48,6 +62,26 @@ cd web; .\node_modules\.bin\next.cmd dev -H 0.0.0.0 -p 3000
 - PowerShell 取证：stdout 回传失效，需 `Set-Content` 写文件再 Read。Bash 的 coreutils 可能整体失效（`ls/grep/head/dirname` not found），此时改用 `python -c` 或 PowerShell。
 - 服务长期运行请让用户在自有终端跑 `scripts/dev/start.ps1`；agent 内进程会随任务回收。
 - **`.ps1` 一律只写 ASCII**：`Write` 产出的是无 BOM UTF-8，而 Windows PowerShell 5.1 按 ANSI(GBK) 解码，中文注释/字符串会乱码甚至触发 `字符串缺少终止符`。可用 `[System.Management.Automation.Language.Parser]::ParseFile()` 静态校验语法，无需真的执行。
+
+## macOS 环境（2026-09 起，工作目录 /Users/hongguoliang/IdeaProjects/aipy）
+- 仓库里没有 `.venv`，用 `/Users/hongguoliang/.workbuddy/binaries/python/versions/3.13.12/bin/python3 -m venv .venv` 建。
+- **默认 PyPI 源会卡死**（装 `fastapi` 超 120s 零进展），必须加 `-i https://pypi.tuna.tsinghua.edu.cn/simple`。
+- **后台长时间跑 pip 会把 Bash 工具拖成 137(SIGTERM)**：之后连 `date`/`pwd` 都执行不了，Read/Edit 仍正常。装依赖要前台跑完，或及时停掉后台任务。
+- 系统没有 `timeout` 命令；需要超时用 `python -c` 里的 `signal.alarm()` 或改后台跑。
+
+## 远程库凭据（2026-09-28 核实，重要）
+- **仓库里没有任何指向 `120.26.123.108` 的连接串**。该 IP 只出现在 `code-review-*.md` 和本笔记里；
+  `src/aipy/shared/config.py`、`migrations/alembic.ini`、`.env.example`、`.github/workflows/ci.yml`、
+  `deploy/compose.yaml` 全部指向 `localhost`。所以「远程连接在代码上」这个前提不成立——代码不会自带远程地址。
+- **本机没有 `.env`**（只有 `.env.example`，592B，内容是 `aipy:aipy@localhost:5432/aipy` + `redis://localhost:6379`）。
+- 连通性：远程 PG `120.26.123.108:7891`、Redis `:3769` **端口可达**；本地 `127.0.0.1:5432`/`:6379` **拒连**。
+- 认证：用 `aipy/aipy`、`aipg/aipg`、`postgres/postgres` 试连远程 PG 均
+  `FATAL: password authentication failed for user "<u>"` —— 报的是「口令错」而不是「角色不存在」，
+  说明 `aipy`/`aipg`/`postgres` 三个角色都存在，只是口令未知。**没有口令就无法做端到端验证。**
+- 要跑通全链路，需用户把远程口令写进根 `.env`：
+  `AIPY_DATABASE__URL=postgresql+psycopg://<user>:<pwd>@120.26.123.108:7891/aipg_test`
+  `AIPY_REDIS__URL=redis://:<pwd>@120.26.123.108:3769/7`、`AIPY_CELERY__BROKER_URL=.../7`（Redis 统一 DB7）。
+- 本机**未安装**本地 PG/Redis（`brew list` 里没有，5432/6379 拒连）——用户要求的「把本地库删掉」已完成。
 
 ## 用户偏好
 - 要简洁、不要冗余；变更摘要用表格；先给结论再列证据；多步改动过程中会反复要求增量确认。

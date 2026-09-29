@@ -5,8 +5,8 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
 
-from ..dependencies import get_current_session, get_session_factory, require_tenant
 from .. import repositories
+from ..dependencies import get_current_session, get_session_factory, require_tenant
 from ..schemas import RoleDetail, RoleSummary, TenantSession, UpdateRoleRequest
 
 router = APIRouter(prefix="/roles", tags=["roles"])

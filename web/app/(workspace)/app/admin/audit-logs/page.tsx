@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FileClock, Filter } from "lucide-react";
 import { PageHeader, StatusBadge } from "@/components/ui";
 import { apiClient } from "@/lib/api-client";
-import type { Page } from "@/lib/api-client";
+import type { ListQuery, Page } from "@/lib/api-client";
 import type { AuditEventDetail, AuditEventSummary, StatusTone } from "@/lib/types";
 
 const resultTone: Record<string, StatusTone> = {
@@ -36,9 +36,10 @@ export default function AuditLogsPage() {
 
   const load = useCallback(() => {
     setLoading(true);
-    const query = new URLSearchParams(
-      Object.entries(filters).filter(([, v]) => v) as [string, string][],
-    );
+    const query: ListQuery = {
+      action: filters.action || undefined,
+      result: filters.result || undefined,
+    };
     apiClient
       .listAuditLogs(query)
       .then((data) => {

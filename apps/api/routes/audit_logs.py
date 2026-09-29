@@ -4,8 +4,8 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from ..dependencies import get_current_session, get_session_factory, require_tenant
 from .. import repositories
+from ..dependencies import get_current_session, get_session_factory, require_tenant
 from ..schemas import AuditEventDetail, AuditEventSummary, Page, TenantSession
 
 router = APIRouter(prefix="/audit-logs", tags=["audit"])

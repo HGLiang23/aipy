@@ -1,6 +1,8 @@
 # AI 内容 SaaS 详细设计
 
-本目录是首版实现的统一设计基线。
+本目录是设计基线与实现现状的合集：`00`–`07` 与 `adr/` 描述方向性设计，
+`08-project-structure.md` 描述**代码当前实际长什么样**。两者冲突时，以 `08` 与
+`create_app().openapi()` 为准。
 
 ## 文档索引
 
@@ -13,7 +15,8 @@
 7. [ADR-0001: MVP 工程实现基线](./adr/0001-mvp-implementation-baseline.md)
 8. [M0 决策闭环](./06-m0-closure.md)
 9. [安全威胁模型](./07-security-threat-model.md)
-10. [OpenAPI 3.1 草案](../openapi/openapi.yaml)
+10. [项目结构与功能地图](./08-project-structure.md)（按当前代码逐层说明目录、模块、链路与工程约定）
+11. [OpenAPI 3.1 草案](../openapi/openapi.yaml)（**手写草案，路径与实现不一致，不是契约来源**）
 
 ## 使用规则
 

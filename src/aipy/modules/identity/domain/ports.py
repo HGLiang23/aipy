@@ -50,3 +50,17 @@ class PasswordHasher(Protocol):
     def hash(self, password: str) -> str: ...
 
     def verify(self, password: str, password_hash: str) -> bool: ...
+
+
+class LoginLockout(Protocol):
+    """Brute-force protection keyed by a caller-supplied identifier."""
+
+    def is_locked(self, key: str) -> bool: ...
+
+    def record_failure(self, key: str) -> None:
+        """Register a failed attempt and lock the key once the budget is spent."""
+        ...
+
+    def reset(self, key: str) -> None:
+        """Clear attempts and any active lock after a success."""
+        ...

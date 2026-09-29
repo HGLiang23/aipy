@@ -15,7 +15,9 @@ dependencies = [
     "psycopg[binary]>=3.2,<4",
     "pwdlib[argon2]>=0.2,<1",
     "pydantic-settings>=2.7,<3",
+    "openai>=1.55,<2",
     "pyjwt>=2.10,<3",
+    "python-multipart>=0.0.20,<1",
     "redis>=5.2,<6",
     "sqlalchemy>=2.0,<3",
     "uuid6>=2024.7.10",
@@ -45,6 +47,14 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+# B008 flags `Depends()`/`Cookie()` in argument defaults, which is the documented
+# FastAPI dependency-injection idiom; allowing it keeps route signatures idiomatic.
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+# The seed script must extend sys.path before importing the package so it also
+# works without an editable install, which is exactly what E402 flags.
+"scripts/seed_dev.py" = ["E402"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -53,5 +63,5 @@ packages = ["aipy", "apps"]
 mypy_path = "src"
 
 [[tool.mypy.overrides]]
-module = ["celery", "celery.*"]
+module = ["celery", "celery.*", "kombu", "kombu.*"]
 ignore_missing_imports = true

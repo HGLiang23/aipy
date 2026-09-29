@@ -4,9 +4,9 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from ..dependencies import get_current_session, get_session_factory, require_tenant
 from .. import repositories
-from ..schemas import TenantSession, WorkflowTemplateDetail, WorkflowTemplateSummary, Page
+from ..dependencies import get_current_session, get_session_factory, require_tenant
+from ..schemas import Page, TenantSession, WorkflowTemplateDetail, WorkflowTemplateSummary
 
 router = APIRouter(prefix="/workflow-templates", tags=["workflow-templates"])
 

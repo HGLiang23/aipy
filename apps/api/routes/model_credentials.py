@@ -9,8 +9,8 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError
 
-from ..dependencies import get_current_session, get_session_factory, require_tenant
 from .. import repositories
+from ..dependencies import get_current_session, get_session_factory, require_tenant
 from ..schemas import (
     CreateModelCredentialRequest,
     ModelCatalogItem,

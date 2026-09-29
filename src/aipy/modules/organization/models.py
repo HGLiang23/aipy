@@ -17,6 +17,11 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import CITEXT
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+# ``Role`` / ``RolePermission`` live in ``authorization.models`` (the canonical
+# RBAC tables). Re-export them here so both branches resolve to the same class
+# and the same ``role`` / ``role_permission`` table instead of registering a
+# duplicate during the merge.
+from aipy.modules.authorization.models import Role, RolePermission  # noqa: F401
 from aipy.shared.db import Base, EntityMixin, TenantEntityMixin
 
 
@@ -126,6 +131,31 @@ class Team(TenantEntityMixin, Base):
     status: Mapped[str] = mapped_column(
         String(20), nullable=False, default="ACTIVE", comment="状态：ACTIVE 启用 / INACTIVE 停用"
     )
+
+
+class MembershipRole(TenantEntityMixin, Base):
+    __tablename__ = "membership_role"
+    __table_args__ = (
+        UniqueConstraint("tenant_id", "id"),
+        UniqueConstraint("tenant_id", "membership_id", "role_id"),
+        ForeignKeyConstraint(
+            ["tenant_id", "membership_id"],
+            ["tenant_membership.tenant_id", "tenant_membership.id"],
+            name="fk_membership_role_tenant_membership",
+            ondelete="CASCADE",
+        ),
+        ForeignKeyConstraint(
+            ["tenant_id", "role_id"],
+            ["role.tenant_id", "role.id"],
+            name="fk_membership_role_tenant_role",
+            ondelete="CASCADE",
+        ),
+        Index("ix_membership_role_tenant_membership", "tenant_id", "membership_id"),
+        {"comment": "成员角色：租户成员与角色的多对多关联，一人多角色时权限取并集"},
+    )
+
+    membership_id: Mapped[UUID] = mapped_column(nullable=False, comment="关联的租户成员 ID")
+    role_id: Mapped[UUID] = mapped_column(nullable=False, comment="关联的角色 ID")
 
 
 class TeamMember(TenantEntityMixin, Base):

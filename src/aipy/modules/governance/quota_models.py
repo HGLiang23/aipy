@@ -8,7 +8,6 @@ projection, so it can be introduced later without a data migration.
 
 from datetime import datetime
 from decimal import Decimal
-from uuid import UUID
 
 from sqlalchemy import (
     Boolean,

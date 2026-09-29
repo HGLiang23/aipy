@@ -6,7 +6,6 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 
 from aipy.shared.security.errors import (
     AuthenticationError,
-    AuthorizationDeniedError,
     SecurityError,
 )
 

@@ -4,8 +4,8 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from ..dependencies import get_current_session, get_session_factory, require_tenant
 from .. import repositories
+from ..dependencies import get_current_session, get_session_factory, require_tenant
 from ..schemas import (
     CreateMemberRequest,
     CreateMemberResponse,
@@ -26,7 +26,7 @@ def list_members_endpoint(
     ids: tuple[UUID, UUID] = Depends(require_tenant),
     _: TenantSession = Depends(get_current_session),
 ) -> Page[MemberSummary]:
-    return repositories.list_members(get_session_factory(), ids[0], page, page_size)
+    return repositories.list_members_paged(get_session_factory(), ids[0], page, page_size)
 
 
 @router.post("", response_model=CreateMemberResponse, status_code=status.HTTP_201_CREATED)
