@@ -30,7 +30,6 @@ from aipy.modules.authorization.infrastructure.role_catalog import (
 )
 from aipy.modules.organization.models import (
     AppUser,
-    MembershipRole,
     Role,
     RolePermission,
     TenantMembership,
@@ -93,12 +92,11 @@ class SqlAuthorizationPolicyRepository(AuthorizationPolicyRepository):
             session.execute(
                 select(RolePermission.permission_code)
                 .join(Role, Role.id == RolePermission.role_id)
-                .join(MembershipRole, MembershipRole.role_id == Role.id)
+                .join(TenantMembership, TenantMembership.role_id == Role.id)
                 .where(
-                    MembershipRole.tenant_id == tenant_id,
-                    MembershipRole.membership_id == membership_id,
+                    TenantMembership.tenant_id == tenant_id,
+                    TenantMembership.id == membership_id,
                     Role.tenant_id == tenant_id,
-                    Role.status == "ACTIVE",
                 )
             )
             .scalars()
